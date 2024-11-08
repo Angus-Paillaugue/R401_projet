@@ -10,7 +10,7 @@ class UserDAO {
 
   public function get($user) {
     $username = $user->getId();
-    $data = $this->conn->run_query('SELECT * FROM users WHERE username = ?;', $username);
+    $data = $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
     $data = $data[0];
   }
 
@@ -18,7 +18,7 @@ class UserDAO {
     $username = $user->getUsername();
     $password_hash = $user->getPasswordHash();
     $insertedRow = $this->conn->run_query(
-      'INSERT INTO users (username, password_hash) VALUES (?, ?);',
+      'INSERT INTO user (username, password_hash) VALUES (?, ?);',
       $username,
       $password_hash
     );
@@ -30,7 +30,7 @@ class UserDAO {
     $username = $user->getUsername();
     $password_hash = $user->getPasswordHash();
     $this->conn->run_query(
-      'UPDATE users SET username = ?, password_hash = ? WHERE id = ?;',
+      'UPDATE user SET username = ?, password_hash = ? WHERE id = ?;',
       $username,
       $password_hash,
       $id
@@ -39,15 +39,15 @@ class UserDAO {
 
   public function delete($user) {
     $id = $user->getId();
-    $this->conn->run_query('DELETE FROM users WHERE id = ?;', $id);
+    $this->conn->run_query('DELETE FROM user WHERE id = ?;', $id);
   }
 
   public function getAll() {
-    return $this->conn->run_query('SELECT * FROM users;');
+    return $this->conn->run_query('SELECT * FROM user;');
   }
 
   public function search($username) {
-    return $this->conn->run_query('SELECT * FROM users WHERE username = ?;', $username);
+    return $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
   }
 }
 ?>

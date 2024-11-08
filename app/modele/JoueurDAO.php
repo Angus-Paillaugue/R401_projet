@@ -23,7 +23,7 @@ class JoueurDAO {
     $poids = $joueur->getPoids();
     $statut = $joueur->getStatut();
     $insertedRow = $this->conn->run_query(
-      'INSERT INTO joueurs (nom, prenom, numero_licence, date_naissance, taille, poids, statut) VALUES (?, ?, ?, ?, ?, ?, ?);',
+      'INSERT INTO joueur (nom, prenom, numero_licence, date_naissance, taille, poids, statut) VALUES (?, ?, ?, ?, ?, ?, ?);',
       $nom,
       $prenom,
       $numeroLicence,
@@ -45,7 +45,7 @@ class JoueurDAO {
     $poids = $joueur->getPoids();
     $statut = $joueur->getStatut();
     $this->conn->run_query(
-      'UPDATE joueurs SET nom = ?, prenom = ?, numero_licence = ?, date_naissance = ?, taille = ?, poids = ?, statut = ? WHERE id = ?;',
+      'UPDATE joueur SET nom = ?, prenom = ?, numero_licence = ?, date_naissance = ?, taille = ?, poids = ?, statut = ? WHERE id = ?;',
       $nom,
       $prenom,
       $numeroLicence,
@@ -59,15 +59,15 @@ class JoueurDAO {
 
   public function delete($joueur) {
     $id = $joueur->getId();
-    $this->conn->run_query('DELETE FROM joueurs WHERE id = ?;', $id);
+    $this->conn->run_query('DELETE FROM joueur WHERE id = ?;', $id);
   }
 
   public function getAll() {
-    return $this->conn->run_query('SELECT * FROM joueurs;');
+    return $this->conn->run_query('SELECT * FROM joueur;');
   }
 
   public function search($nom) {
-    return $this->conn->run_query('SELECT * FROM joueurs WHERE nom = ?;', $nom);
+    return $this->conn->run_query('SELECT * FROM joueur WHERE nom = ?;', $nom);
   }
 }
 ?>

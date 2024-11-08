@@ -25,7 +25,7 @@ class CreerUnJoueur {
     $this->DAO = new JoueurDAO();
   }
 
-  public function exec() {
+  public function execute() {
     $joueur = new Joueur($this->nom, $this->prenom, $this->numero_licence, $this->date_naissance, $this->taille, $this->poids, $this->statut, $this->commentaire);
     $insertedRow = $this->DAO->insert($joueur);
     $joueur->setId($insertedRow['id']);

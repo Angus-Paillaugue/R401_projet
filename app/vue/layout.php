@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,15 +12,14 @@
     require_once '../../lib/components.php';
     require_once '../../lib/jwt.php';
 
-    Components::Link(['href' => 'log-in.php', 'label' => 'Login']);
-    Components::Link(['href' => 'sign-up.php', 'label' => 'Sign Up']);
+    // Is logged in?
     if (isset($_COOKIE['token'])) {
       $token = $_COOKIE['token'];
       $payload = JWT::validateJWT($token);
       if ($payload) {
         Components::Link([
-          'label' => 'Page restreinte',
-          'href' => 'restricted.php',
+          'label' => 'Dashboard',
+          'href' => 'dashboard.php',
         ]);
         Components::Link([
           'label' => 'Se déconnecter',
@@ -29,6 +27,9 @@
           'class' => 'ml-auto',
         ]);
       }
+    }else {
+      Components::Link(['href' => 'log-in.php', 'label' => 'Login']);
+      Components::Link(['href' => 'sign-up.php', 'label' => 'Sign Up']);
     }
     ?>
   </nav>

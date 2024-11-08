@@ -1,18 +1,21 @@
 <?php
 session_start();
-require_once '../../lib/connector.php';
-require_once '../../lib/components.php';
-require_once '../../lib/error.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+require_once '../../lib/jwt.php';
+require_once '../../lib/cookies.php';
+require_once '../../lib/components.php';
+require_once '../../lib/error.php';
+require_once '../controleur/CreerUnUtilisateur.php';
+require_once '../controleur/UtilisateurExiste.php';
+
 $title = 'Sign up';
+$loc = htmlspecialchars($_SERVER['PHP_SELF']) . '?' . http_build_query($_GET);
 
 ob_start();
 
-$conn = sql_connector::getInstance('auth_test', 'localhost', 'school', "\$iutinfo");
-$loc = htmlspecialchars($_SERVER['PHP_SELF']) . '?' . http_build_query($_GET);
-
+// Form submission handling
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $username = $_POST['username'];
   $password = $_POST['password'];
@@ -21,17 +24,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   } else {
     $username = htmlspecialchars($username);
     $password = htmlspecialchars($password);
-    $rows = $conn->run_query('SELECT * FROM users WHERE username=?;', $username);
-    if (count($rows) > 0) {
-      ErrorHandling::setError('Cet utilisateur existe déjà');
+    $userExists = new UtilisateurExiste($username);
+    if ($userExists->execute()) {
+      ErrorHandling::setError('Ce nom d\'utilisateur existe déjà');
     } else {
       $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-      $conn->run_query(
-        'INSERT INTO users (username, password_hash) VALUES (?, ?);',
-        $username,
-        $hashed_password
-      );
-      header('Location: log-in.php', true, 303);
+      $createdUser = new CreerUnUtilisateur($username, $hashed_password);
+      $createdUser->execute();
+      $payload = [
+        'id' => $createdUser,
+        'username  ' => $username,
+        'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
+      ];
+      $jwt = JWT::generateJWT($payload);
+      Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
+      header("Location: dashboard.php", true, 303);
     }
   }
   header("Location: $loc", true, 303);
@@ -42,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SERVER['PHP_SELF']
   ); ?>" method="post" class="p-4 border space-y-4 flex flex-col rounded-xl w-full bg-white">
     <h2 class="m-0">Créer un compte</h2>
-    <?php
+    <?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     Components::Input([
       'id' => 'username',
       'label' => 'Nom d\'utilisateur',
@@ -65,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       'label' => 'Se connecter',
       'href' => 'log-in.php',
     ]);
+  }
     ?>
   </form>
 </div>

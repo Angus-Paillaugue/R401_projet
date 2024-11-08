@@ -17,14 +17,16 @@ class FeuillMatchDAO {
   public function insert($feuillMatch) {
     $id_rencontre = $feuillMatch->getIdRencontre();
     $id_joueur = $feuillMatch->getIdJoueur();
-    $role = $feuillMatch->getRole();
+    $role_debut = $feuillMatch->getRoleDebut();
+    $role_fin = $feuillMatch->getRoleFin();
     $poste = $feuillMatch->getPoste();
     $evaluation = $feuillMatch->getEvaluation();
     $insertedRow = $this->conn->run_query(
-      'INSERT INTO feuille_match (id_rencontre, id_joueur, role, poste, evaluation) VALUES (?, ?, ?, ?, ?);',
+      'INSERT INTO feuille_match (id_rencontre, id_joueur, role_debut, role_fin, poste, evaluation) VALUES (?, ?, ?, ?, ?, ?);',
       $id_rencontre,
       $id_joueur,
-      $role,
+      $role_debut,
+      $role_fin,
       $poste,
       $evaluation
     );
@@ -35,14 +37,16 @@ class FeuillMatchDAO {
     $id = $feuillMatch->getId();
     $id_rencontre = $feuillMatch->getIdRencontre();
     $id_joueur = $feuillMatch->getIdJoueur();
-    $role = $feuillMatch->getRole();
+    $role_debut = $feuillMatch->getRoleDebut();
+    $role_fin = $feuillMatch->getRoleFin();
     $poste = $feuillMatch->getPoste();
     $evaluation = $feuillMatch->getEvaluation();
     $this->conn->run_query(
-      'UPDATE feuille_match SET id_rencontre = ?, id_joueur = ?, role = ?, poste = ?, evaluation = ? WHERE id = ?;',
+      'UPDATE feuille_match SET id_rencontre = ?, id_joueur = ?, role_debut = ?, role_fin = ?, poste = ?, evaluation = ? WHERE id = ?;',
       $id_rencontre,
       $id_joueur,
-      $role,
+      $role_debut,
+      $role_fin,
       $poste,
       $evaluation,
       $id

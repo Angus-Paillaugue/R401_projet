@@ -32,5 +32,9 @@ class User {
   public function setPasswordHash($password_hash) {
     $this->password_hash = $password_hash;
   }
+
+  public function __toString() {
+    return $this->username . ' ' . $this->password_hash;
+  }
 }
 ?>

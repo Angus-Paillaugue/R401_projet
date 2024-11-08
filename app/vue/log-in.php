@@ -3,28 +3,28 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once '../../lib/connector.php';
 require_once '../../lib/jwt.php';
 require_once '../../lib/cookies.php';
 require_once '../../lib/components.php';
 require_once '../../lib/error.php';
+require_once '../controleur/UtilisateurExiste.php';
 
 $title = 'Log-in';
-$conn = sql_connector::getInstance('auth_test', 'localhost', 'school', "\$iutinfo");
 $loc = htmlspecialchars($_SERVER['PHP_SELF']) . '?' . http_build_query($_GET);
 
 ob_start();
 
 // Form submission handling
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $lastName = $_POST['last_name'];
+  $username = $_POST['username'];
   $password = $_POST['password'];
-  if (empty($lastName) || empty($password)) {
+  if (empty($username) || empty($password)) {
     ErrorHandling::setError('Veuillez remplir tous les champs');
   } else {
-    $lastName = htmlspecialchars($lastName);
+    $username = htmlspecialchars($username);
     $password = htmlspecialchars($password);
-    $user = $conn->run_query('SELECT * FROM users WHERE last_name=?;', $lastName);
+    $userExists = new UtilisateurExiste($username);
+    $user = $userExists->execute();
     if (count($user) == 0) {
       ErrorHandling::setError("Cet utilisateur n'existe pas");
     } else {
@@ -32,11 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if (password_verify($password, $user['password_hash'])) {
         $payload = [
           'id' => $user['id'],
-          'last_name  ' => $user['lastName'],
+          'username' => $user['username'],
           'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
         ];
         $jwt = JWT::generateJWT($payload);
         Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
+        header("Location: dashboard.php", true, 303);
       } else {
         ErrorHandling::setError('Mot de passe incorrect');
       }
@@ -54,9 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Form building
     Components::Input([
-      'id' => 'last_name',
-      'label' => 'Nom de famille',
-      'placeholder' => "Votre nom de famille",
+      'id' => 'username',
+      'label' => 'Nom d\'utilisateur',
+      'placeholder' => "Votre nom d'utilisateur",
     ]);
     Components::Input([
       'id' => 'password',

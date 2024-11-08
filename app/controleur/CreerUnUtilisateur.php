@@ -1,6 +1,6 @@
 <?php
 require_once '../modele/User.php';
-require_once '../modele//UserDAO.php';
+require_once '../modele/UserDAO.php';
 
 class CreerUnUtilisateur {
   private $username;
@@ -13,7 +13,7 @@ class CreerUnUtilisateur {
     $this->DAO = new UserDAO();
   }
 
-  public function exec() {
+  public function execute() {
     $user = new User($this->username, $this->password_hash);
     $insertedRow = $this->DAO->insert($user);
     $user->setId($insertedRow['id']);

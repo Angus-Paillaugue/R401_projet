@@ -44,7 +44,8 @@ CREATE TABLE feuille_match (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_rencontre INT NOT NULL,
     id_joueur INT NOT NULL,
-    role ENUM('Titulaire', 'Remplaçant') NOT NULL,
+    role_debut ENUM('Titulaire', 'Remplaçant') NOT NULL,
+    role_fin ENUM('Titulaire', 'Remplaçant') NOT NULL,
     poste VARCHAR(50),
     evaluation INT CHECK(evaluation BETWEEN 1 AND 5),
 
@@ -57,5 +58,5 @@ CREATE TABLE feuille_match (
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password_hash VARCHAR(255) NOT NULL
 );

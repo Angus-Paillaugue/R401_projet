@@ -3,14 +3,16 @@ class FeuillMatch {
   private $id;
   private $id_rencontre;
   private $id_joueur;
-  private $role;
+  private $role_debut;
+  private $role_fin;
   private $poste;
   private $evaluation;
 
-  public function __construct($id_rencontre, $id_joueur, $role, $poste, $evaluation) {
+  public function __construct($id_rencontre, $id_joueur, $role_debut, $role_fin, $poste, $evaluation) {
     $this->id_rencontre = $id_rencontre;
     $this->id_joueur = $id_joueur;
-    $this->role = $role;
+    $this->role_debut = $role_debut;
+    $this->role_fin = $role_fin;
     $this->poste = $poste;
     $this->evaluation = $evaluation;
   }
@@ -27,8 +29,12 @@ class FeuillMatch {
     return $this->id_joueur;
   }
 
-  public function getRole() {
-    return $this->role;
+  public function getRoleDebut() {
+    return $this->role_debut;
+  }
+
+  public function getRoleFin() {
+    return $this->role_fin;
   }
 
   public function getPoste() {
@@ -51,8 +57,12 @@ class FeuillMatch {
     $this->id_joueur = $id_joueur;
   }
 
-  public function setRole($role) {
-    $this->role = $role;
+  public function setRoleDebut($role_debut) {
+    $this->role_debut = $role_debut;
+  }
+
+  public function setRoleFin($role_fin) {
+    $this->role_fin = $role_fin;
   }
 
   public function setPoste($poste) {
@@ -64,7 +74,7 @@ class FeuillMatch {
   }
 
   public function __toString() {
-    return $this->id_rencontre . ' ' . $this->id_joueur . ' ' . $this->role . ' ' . $this->poste . ' ' . $this->evaluation;
+    return $this->id_rencontre . ' ' . $this->id_joueur . ' ' . $this->role_debut . ' ' . $this->role_fin . ' ' . $this->poste . ' ' . $this->evaluation;
   }
 }
 ?>

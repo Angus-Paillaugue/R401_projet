@@ -11,7 +11,7 @@ class SupprimerUnUtilisateur {
     $this->DAO = new JoueurDAO();
   }
 
-  public function exec() {
+  public function execute() {
     $this->DAO->delete($this->user);
   }
 }
