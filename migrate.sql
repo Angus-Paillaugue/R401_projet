@@ -128,3 +128,19 @@ INSERT INTO commentaire (id_joueur, contenu) VALUES
 (30, 'Attaquant très rapide, excellent dans les finitions.'),
 (31, 'Blessé à la hanche, en rééducation pour quelques mois.'),
 (32, 'Joueur énergique, apporte beaucoup de dynamisme.');
+
+
+INSERT INTO rencontre (date_heure, equipe_adverse, lieu, resultat) VALUES
+-- Rencontres passées
+('2024-04-15 15:00:00', 'Olympique Lyonnais', 'Domicile', 'Victoire'),
+('2024-05-10 18:30:00', 'AS Monaco', 'Extérieur', 'Défaite'),
+('2024-06-20 17:45:00', 'Marseille FC', 'Domicile', 'Nul'),
+('2024-07-15 16:00:00', 'Paris Saint-Germain', 'Extérieur', 'Défaite'),
+('2024-08-05 19:00:00', 'OGC Nice', 'Domicile', 'Victoire'),
+
+-- Rencontres à venir
+('2024-11-20 14:00:00', 'Stade Rennais', 'Extérieur', NULL),
+('2024-12-05 16:30:00', 'Bordeaux FC', 'Domicile', NULL),
+('2025-01-10 18:00:00', 'Nantes FC', 'Extérieur', NULL),
+('2025-02-22 15:30:00', 'Lille OSC', 'Domicile', NULL),
+('2025-03-15 17:45:00', 'Strasbourg FC', 'Extérieur', NULL);
