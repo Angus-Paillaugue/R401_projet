@@ -4,7 +4,7 @@
  *
  * A singleton class to manage MySQL database connections using PDO.
  *
- * @package School\Lib
+ * @package app/lib
  */
 class sql_connector
 {
@@ -54,7 +54,12 @@ class sql_connector
   public static function getInstance()
   {
     if (self::$instance === null) {
-      self::$instance = new self('R301_projet', 'localhost', 'R301_projet', "R301_projet");
+      self::$instance = new self(
+        'R301_projet',
+        '127.0.0.1',
+        'R301_projet',
+        'R301_projet'
+      );
     }
     return self::$instance;
   }

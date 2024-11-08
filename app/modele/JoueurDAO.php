@@ -1,20 +1,40 @@
 <?php
-require_once '../../lib/connector.php';
+require_once __DIR__ . '/../lib/connector.php';
+require_once 'CommentaireDAO.php';
+require_once 'Joueur.php';
 
-class JoueurDAO {
+class JoueurDAO
+{
   private $conn;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->conn = sql_connector::getInstance();
   }
 
-  public function get($joueur) {
-    $id = $joueur->getId();
-    $data = $this->conn->run_query('SELECT * FROM joueurs WHERE id = ?;', $id);
+  public function get($id)
+  {
+    $data = $this->conn->run_query('SELECT * FROM joueur WHERE id = ?;', $id);
     $data = $data[0];
+
+    $joueur = new Joueur(
+      $data['nom'],
+      $data['prenom'],
+      $data['numero_licence'],
+      $data['date_naissance'],
+      $data['taille'],
+      $data['poids'],
+      $data['statut']
+    );
+    $joueur->setId($data['id']);
+    $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
+    $joueur->setCommentaires($commentaires);
+
+    return $joueur;
   }
 
-  public function insert($joueur) {
+  public function insert($joueur)
+  {
     $nom = $joueur->getNom();
     $prenom = $joueur->getPrenom();
     $numeroLicence = $joueur->getNumeroLicence();
@@ -35,7 +55,8 @@ class JoueurDAO {
     return $insertedRow;
   }
 
-  public function update($joueur) {
+  public function update($joueur)
+  {
     $id = $joueur->getId();
     $nom = $joueur->getNom();
     $prenom = $joueur->getPrenom();
@@ -57,17 +78,59 @@ class JoueurDAO {
     );
   }
 
-  public function delete($joueur) {
+  public function delete($joueur)
+  {
     $id = $joueur->getId();
     $this->conn->run_query('DELETE FROM joueur WHERE id = ?;', $id);
   }
 
-  public function getAll() {
-    return $this->conn->run_query('SELECT * FROM joueur;');
+  public function getAll()
+  {
+    $rows = $this->conn->run_query('SELECT * FROM joueur;');
+    $joueursArray = [];
+    foreach ($rows as $row) {
+      $joueur = new Joueur(
+        $row['nom'],
+        $row['prenom'],
+        $row['numero_licence'],
+        $row['date_naissance'],
+        $row['taille'],
+        $row['poids'],
+        $row['statut']
+      );
+      $joueur->setId($row['id']);
+      $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
+      $joueur->setCommentaires($commentaires);
+      array_push($joueursArray, $joueur);
+    }
+
+    return $joueursArray;
   }
 
-  public function search($nom) {
-    return $this->conn->run_query('SELECT * FROM joueur WHERE nom = ?;', $nom);
+  public function search($nom)
+  {
+    $rows = $this->conn->run_query(
+      'SELECT * FROM joueur WHERE nom LIKE ?;',
+      '%' . $nom . '%'
+    );
+    $joueursArray = [];
+    foreach ($rows as $row) {
+      $joueur = new Joueur(
+        $row['nom'],
+        $row['prenom'],
+        $row['numero_licence'],
+        $row['date_naissance'],
+        $row['taille'],
+        $row['poids'],
+        $row['statut']
+      );
+      $joueur->setId($row['id']);
+      $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
+      $joueur->setCommentaires($commentaires);
+      array_push($joueursArray, $joueur);
+    }
+
+    return $joueursArray;
   }
 }
 ?>

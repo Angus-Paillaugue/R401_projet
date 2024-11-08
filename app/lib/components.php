@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 use TailwindMerge\TailwindMerge;
 /**
  * Class Components
@@ -69,7 +69,7 @@ class Components
     $baseClasses =
       'cursor-pointer transition-all duration-200 ease-in-out px-4 py-2 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center flex flex-row gap-2 text-center';
     $classes = $tw->merge($baseClasses, $variantClasses, $class);
-    $iconHTML = $icon != '' ? Components::Icon([ 'icon' => $icon ]) : '';
+    $iconHTML = $icon != '' ? Components::Icon(['icon' => $icon]) : '';
     if ($href) {
       echo "<a href='$href' " .
         ($id && 'id=' . $id) .
@@ -99,11 +99,20 @@ class Components
     $href = Components::merge($params, 'href');
     $class = Components::merge($params, 'class');
     $id = Components::merge($params, 'id');
-    $disabled = Components::merge($params, 'disabled', '', 'disabled');
-    $classes = $tw->merge('cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-900 hover:text-primary-600 underline transition-colors', $class);
+    if (Components::merge($params, 'disabled')) {
+      $class = $tw->merge(
+        $class,
+        'cursor-not-allowed text-neutral-500 hover:text-neutral-500 no-underline'
+      );
+      $href = '#';
+    }
+    $classes = $tw->merge(
+      'cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-900 hover:text-primary-600 underline transition-colors',
+      $class
+    );
     echo "<a href='$href' " .
       ($id && 'id=' . $id) .
-      " class='$classes' $disabled>$label</a>";
+      " class='$classes'>$label</a>";
   }
 
   /**
@@ -121,19 +130,36 @@ class Components
    */
   public static function Input($params = [])
   {
-    $placeholder = htmlspecialchars(Components::merge($params, 'placeholder'), ENT_QUOTES);
     $id = Components::merge($params, 'id', false);
     if (!$id) {
       throw new Exception('Input field must have an ID');
     }
-    $label = $params['label'] !== null ? "<label for='input'>" . $params['label'] . '</label>' : '';
+    $label = Components::merge(
+      $params,
+      'label',
+      '',
+      "<label for='input'>" . Components::merge($params, 'label') . '</label>'
+    );
+    $placeholder = htmlspecialchars(
+      Components::merge(
+        $params,
+        'placeholder',
+        Components::merge($params, 'label')
+      ),
+      ENT_QUOTES
+    );
     $type = Components::merge($params, 'type', 'text');
     $class = Components::merge($params, 'class');
     $disabled = Components::merge($params, 'disabled', '', 'disabled');
+    $value = Components::merge($params, 'value');
+    $name = Components::merge($params, 'name', $id);
+    if ($value) {
+      $value = "value='$value'";
+    }
     echo "
         <div class='block w-full'>
           $label
-          <input type='$type' id='$id' name='$id' class='$class' placeholder='$placeholder' $disabled />
+          <input type='$type' $value id='$id' name='$name' class='$class' placeholder='$placeholder' $disabled />
         </div>
       ";
   }
@@ -175,26 +201,87 @@ class Components
     if (!array_key_exists($variant, $variantClasses)) {
       throw new Exception('Invalid variant type');
     }
-    $classes = $tw->merge("rounded-lg px-4 py-2 flex flex-row border gap-4 items-center", $variantClasses[$variant], $class);
+    $classes = $tw->merge(
+      'rounded-lg px-4 py-2 flex flex-row border gap-4 items-center',
+      $variantClasses[$variant],
+      $class
+    );
     echo '<div ' .
       ($id && 'id=' . $id) .
       " class='$classes'>$icons[$variant]<p class='p-0 m-0'>$text</p></div>";
   }
 
-  public static function Icon($params = []) {
+  /**
+   * Generates an SVG icon based on the provided parameters.
+   *
+   * @param array $params An associative array of parameters.
+   *                      - 'icon' (string): The name of the icon to generate. Required.
+   *                      - 'class' (string): Additional CSS classes to apply to the SVG element. Optional.
+   *
+   * @return string The generated SVG icon as an HTML string.
+   *
+   * @throws Exception If the 'icon' parameter is not provided or if an invalid icon name is given.
+   */
+  public static function Icon($params = [])
+  {
     $icon = Components::merge($params, 'icon');
-    if(!$icon) {
+    if (!$icon) {
       throw new Exception('Icon name is required');
     }
     $class = Components::merge($params, 'class');
-    $classes = TailwindMerge::instance()->merge("size-6", $class);
+    $classes = TailwindMerge::instance()->merge('size-6', $class);
     $iconPaths = [
-      'plus' => '<path d="M5 12h14"/><path d="M12 5v14"/>'
+      'plus' => '<path d="M5 12h14"/><path d="M12 5v14"/>',
+      'Extérieur' =>
+        '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+      'Domicile' =>
+        '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/>',
+      'arrowRight' => '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     ];
-    if(!array_key_exists($icon, $iconPaths)) {
+    if (!array_key_exists($icon, $iconPaths)) {
       throw new Exception('Invalid icon name');
     }
     return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='$classes'>$iconPaths[$icon]</svg>";
+  }
+
+  public static function Select($params = [])
+  {
+    $id = Components::merge($params, 'id', false);
+    if (!$id) {
+      throw new Exception('Select field must have an ID');
+    }
+    $label = Components::merge(
+      $params,
+      'label',
+      '',
+      "<label for='input'>" . Components::merge($params, 'label') . '</label>'
+    );
+    $class = Components::merge($params, 'class');
+    $disabled = Components::merge($params, 'disabled', '', 'disabled');
+    $name = Components::merge($params, 'name', $id);
+    $optionsHTML = '';
+    if (array_key_exists('options', $params)) {
+      foreach ($params['options'] as $option) {
+        if (is_array($option)) {
+          $optionValue = $option['value'];
+          $optionText = $option['text'];
+        } else {
+          $optionValue = $option;
+          $optionText = $option;
+        }
+        $selected =
+          $optionValue == Components::merge($params, 'value') ? 'selected' : '';
+        $optionsHTML .= "<option value='$optionValue' $selected>$optionText</option>";
+      }
+    }
+    echo "
+        <div class='block w-full'>
+          $label
+          <select id='$id' name='$name' class='$class' $disabled>
+            $optionsHTML
+          </select>
+        </div>
+      ";
   }
 }
 

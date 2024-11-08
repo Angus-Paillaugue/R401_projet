@@ -1,17 +1,22 @@
 <?php
-require_once '../../lib/connector.php';
+require_once __DIR__ . '/../lib/connector.php';
 require_once 'Commentaire.php';
 
-class CommentaireDAO {
+class CommentaireDAO
+{
   private $conn;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->conn = sql_connector::getInstance();
   }
 
-  public function get($commentaire) {
-    $id = $commentaire->getId();
-    $data = $this->conn->run_query('SELECT * FROM commentaire WHERE id = ?;', $id);
+  public function get($id)
+  {
+    $data = $this->conn->run_query(
+      'SELECT * FROM commentaire WHERE id = ?;',
+      $id
+    );
     $data = $data[0];
     $commentaire = new Commentaire($data['id_joueur'], $data['contenu']);
     $commentaire->setId($data['id']);
@@ -19,7 +24,8 @@ class CommentaireDAO {
     return $commentaire;
   }
 
-  public function insert($commentaire) {
+  public function insert($commentaire)
+  {
     $id_joueur = $commentaire->getIdJoueur();
     $contenu = $commentaire->getContenu();
     $insertedRow = $this->conn->run_query(
@@ -30,7 +36,8 @@ class CommentaireDAO {
     return $insertedRow;
   }
 
-  public function update($commentaire) {
+  public function update($commentaire)
+  {
     $id = $commentaire->getId();
     $id_joueur = $commentaire->getIdJoueur();
     $contenu = $commentaire->getContenu();
@@ -42,15 +49,34 @@ class CommentaireDAO {
     );
   }
 
-  public function delete($commentaire) {
+  public function delete($commentaire)
+  {
     $id = $commentaire->getId();
     $this->conn->run_query('DELETE FROM commentaire WHERE id = ?;', $id);
   }
 
-  public function getAll() {
+  public function getAll()
+  {
     $data = $this->conn->run_query('SELECT * FROM commentaire;');
 
-    $commentaires = array();
+    $commentaires = [];
+    foreach ($data as $row) {
+      $commentaire = new Commentaire($row['id_joueur'], $row['contenu']);
+      $commentaire->setId($row['id']);
+      array_push($commentaires, $commentaire);
+    }
+    return $commentaires;
+  }
+
+  public function getAllForJoueur($joueur)
+  {
+    $id_joueur = $joueur->getId();
+    $data = $this->conn->run_query(
+      'SELECT * FROM commentaire WHERE id_joueur = ?;',
+      $id_joueur
+    );
+
+    $commentaires = [];
     foreach ($data as $row) {
       $commentaire = new Commentaire($row['id_joueur'], $row['contenu']);
       $commentaire->setId($row['id']);

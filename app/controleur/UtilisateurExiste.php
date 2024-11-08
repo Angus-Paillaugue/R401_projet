@@ -1,16 +1,19 @@
 <?php
-require_once '../modele/UserDAO.php';
+require_once __DIR__ . '/../modele/UserDAO.php';
 
-class UtilisateurExiste {
+class UtilisateurExiste
+{
   private $username;
   private $DAO;
 
-  public function __construct($username) {
+  public function __construct($username)
+  {
     $this->username = $username;
     $this->DAO = new UserDAO();
   }
 
-  public function execute() {
+  public function execute()
+  {
     $user = $this->DAO->search($this->username);
     return $user;
   }

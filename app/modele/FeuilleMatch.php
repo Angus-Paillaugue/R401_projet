@@ -1,5 +1,6 @@
 <?php
-class FeuilleMatch {
+class FeuilleMatch
+{
   private $id;
   private $id_rencontre;
   private $id_joueur;
@@ -7,8 +8,16 @@ class FeuilleMatch {
   private $role_fin;
   private $poste;
   private $evaluation;
+  private $joueur;
 
-  public function __construct($id_rencontre, $id_joueur, $role_debut, $role_fin, $poste, $evaluation) {
+  public function __construct(
+    $id_rencontre,
+    $id_joueur,
+    $role_debut,
+    $role_fin,
+    $poste,
+    $evaluation
+  ) {
     $this->id_rencontre = $id_rencontre;
     $this->id_joueur = $id_joueur;
     $this->role_debut = $role_debut;
@@ -17,64 +26,84 @@ class FeuilleMatch {
     $this->evaluation = $evaluation;
   }
 
-  public function getId() {
+  public function getId()
+  {
     return $this->id;
   }
 
-  public function getIdRencontre() {
+  public function getIdRencontre()
+  {
     return $this->id_rencontre;
   }
 
-  public function getIdJoueur() {
+  public function getIdJoueur()
+  {
     return $this->id_joueur;
   }
 
-  public function getRoleDebut() {
+  public function getRoleDebut()
+  {
     return $this->role_debut;
   }
 
-  public function getRoleFin() {
+  public function getRoleFin()
+  {
     return $this->role_fin;
   }
 
-  public function getPoste() {
+  public function getPoste()
+  {
     return $this->poste;
   }
 
-  public function getEvaluation() {
+  public function getEvaluation()
+  {
     return $this->evaluation;
   }
 
-  public function setId($id) {
+  public function getJoueur()
+  {
+    return $this->joueur;
+  }
+
+  public function setId($id)
+  {
     $this->id = $id;
   }
 
-  public function setIdRencontre($id_rencontre) {
+  public function setIdRencontre($id_rencontre)
+  {
     $this->id_rencontre = $id_rencontre;
   }
 
-  public function setIdJoueur($id_joueur) {
+  public function setIdJoueur($id_joueur)
+  {
     $this->id_joueur = $id_joueur;
   }
 
-  public function setRoleDebut($role_debut) {
+  public function setRoleDebut($role_debut)
+  {
     $this->role_debut = $role_debut;
   }
 
-  public function setRoleFin($role_fin) {
+  public function setRoleFin($role_fin)
+  {
     $this->role_fin = $role_fin;
   }
 
-  public function setPoste($poste) {
+  public function setPoste($poste)
+  {
     $this->poste = $poste;
   }
 
-  public function setEvaluation($evaluation) {
+  public function setEvaluation($evaluation)
+  {
     $this->evaluation = $evaluation;
   }
 
-  public function __toString() {
-    return $this->id_rencontre . ' ' . $this->id_joueur . ' ' . $this->role_debut . ' ' . $this->role_fin . ' ' . $this->poste . ' ' . $this->evaluation;
+  public function setJoueur($joueur)
+  {
+    $this->joueur = $joueur;
   }
 }
 ?>

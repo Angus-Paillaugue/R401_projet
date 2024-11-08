@@ -3,14 +3,24 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once '../../lib/jwt.php';
-require_once '../../lib/cookies.php';
-require_once '../../lib/components.php';
-require_once '../../lib/error.php';
-require_once '../controleur/UtilisateurExiste.php';
+require_once __DIR__ . '/../lib/jwt.php';
+require_once __DIR__ . '/../lib/cookies.php';
+require_once __DIR__ . '/../lib/components.php';
+require_once __DIR__ . '/../lib/error.php';
+require_once __DIR__ . '/../controleur/UtilisateurExiste.php';
 
 $title = 'Log-in';
 $loc = htmlspecialchars($_SERVER['PHP_SELF']) . '?' . http_build_query($_GET);
+
+$jwt = Cookies::getCookie('token');
+$payload = null;
+
+if ($jwt) {
+  $payload = JWT::validateJWT($jwt);
+  if ($payload) {
+    header('Location: /dashboard', true, 303);
+  }
+}
 
 ob_start();
 
@@ -29,15 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ErrorHandling::setError("Cet utilisateur n'existe pas");
     } else {
       $user = $user[0];
-      if (password_verify($password, $user['password_hash'])) {
+      if (password_verify($password, $user->getPasswordHash())) {
         $payload = [
-          'id' => $user['id'],
-          'username' => $user['username'],
+          'id' => $user->getId(),
+          'username' => $user->getUsername(),
           'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
         ];
         $jwt = JWT::generateJWT($payload);
         Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
-        header("Location: dashboard.php", true, 303);
+        header('Location: /dashboard', true, 303);
       } else {
         ErrorHandling::setError('Mot de passe incorrect');
       }
@@ -67,7 +77,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]);
 
     if (ErrorHandling::hasError()) {
-      Components::Alert(['text' => ErrorHandling::getError(), 'variant' => 'danger']);
+      Components::Alert([
+        'text' => ErrorHandling::getError(),
+        'variant' => 'danger',
+      ]);
     }
 
     Components::Button([
@@ -85,5 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php
 $content = ob_get_clean();
 require_once './layout.php';
+
 
 ?>

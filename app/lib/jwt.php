@@ -35,7 +35,12 @@ class JWT
 
     $secret = 'key'; // You should use a more secure key in production
 
-    $signature = hash_hmac('sha256', "$base64UrlHeader.$base64UrlPayload", $secret, true);
+    $signature = hash_hmac(
+      'sha256',
+      "$base64UrlHeader.$base64UrlPayload",
+      $secret,
+      true
+    );
     $base64UrlSignature = JWT::base64UrlEncode($signature);
 
     return "$base64UrlHeader.$base64UrlPayload.$base64UrlSignature";
@@ -63,7 +68,12 @@ class JWT
     $base64UrlHeader = JWT::base64UrlEncode(base64_decode($header));
     $base64UrlPayload = JWT::base64UrlEncode(base64_decode($payload));
 
-    $signature = hash_hmac('sha256', "$base64UrlHeader.$base64UrlPayload", $secret, true);
+    $signature = hash_hmac(
+      'sha256',
+      "$base64UrlHeader.$base64UrlPayload",
+      $secret,
+      true
+    );
     $base64UrlSignature = JWT::base64UrlEncode($signature);
 
     if ($base64UrlSignature === $signature_provided) {

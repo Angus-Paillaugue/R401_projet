@@ -1,24 +1,31 @@
 <?php
-require_once '../../lib/connector.php';
-require_once 'User.php';
+require_once __DIR__ . '/../lib/connector.php';
+require_once __DIR__ . '/User.php';
 
-class UserDAO {
+class UserDAO
+{
   private $conn;
 
-  public function __construct() {
+  public function __construct()
+  {
     $this->conn = sql_connector::getInstance();
   }
 
-  public function get($user) {
+  public function get($user)
+  {
     $username = $user->getId();
-    $data = $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
+    $data = $this->conn->run_query(
+      'SELECT * FROM user WHERE username = ?;',
+      $username
+    );
     $data = $data[0];
     $user = new User($data['username'], $data['password_hash']);
 
     return $user;
   }
 
-  public function insert($user) {
+  public function insert($user)
+  {
     $username = $user->getUsername();
     $password_hash = $user->getPasswordHash();
     $insertedRow = $this->conn->run_query(
@@ -29,7 +36,8 @@ class UserDAO {
     return $insertedRow;
   }
 
-  public function update($user) {
+  public function update($user)
+  {
     $id = $user->getId();
     $username = $user->getUsername();
     $password_hash = $user->getPasswordHash();
@@ -41,15 +49,17 @@ class UserDAO {
     );
   }
 
-  public function delete($user) {
+  public function delete($user)
+  {
     $id = $user->getId();
     $this->conn->run_query('DELETE FROM user WHERE id = ?;', $id);
   }
 
-  public function getAll() {
+  public function getAll()
+  {
     $rows = $this->conn->run_query('SELECT * FROM user;');
 
-    $users = array();
+    $users = [];
     foreach ($rows as $row) {
       $user = new User($row['username'], $row['password_hash']);
       $user->setId($row['id']);
@@ -59,10 +69,14 @@ class UserDAO {
     return $users;
   }
 
-  public function search($username) {
-    $rows = $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
+  public function search($username)
+  {
+    $rows = $this->conn->run_query(
+      'SELECT * FROM user WHERE username = ?;',
+      $username
+    );
 
-    $users = array();
+    $users = [];
     foreach ($rows as $row) {
       $user = new User($row['username'], $row['password_hash']);
       $user->setId($row['id']);

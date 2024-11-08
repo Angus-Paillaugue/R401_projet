@@ -28,8 +28,10 @@ body {
   @apply bg-neutral-400;
 }
 
-input {
-  @apply border border-neutral-300 rounded-lg bg-neutral-50 placeholder:text-neutral-500 px-2 py-1 focus:ring-2 transition-all focus:ring-offset-2 ring-blue-600 focus:outline-none w-full;
+input,
+select,
+textarea {
+  @apply border border-neutral-300 rounded-lg bg-neutral-50 placeholder:text-neutral-500 px-2 py-1 focus:ring-2 transition-all focus:ring-offset-2 ring-primary-600 focus:outline-none w-full;
 }
 label {
   @apply text-neutral-600 font-medium text-base mb-1 block;

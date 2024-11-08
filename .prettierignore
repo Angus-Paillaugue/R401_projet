@@ -1,0 +1,7 @@
+# Ignore artifacts:
+node_modules
+vendor
+package-lock.json
+pnpm-lock.yaml
+composer.lock
+.env

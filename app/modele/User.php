@@ -1,39 +1,48 @@
 <?php
-class User {
+class User
+{
   private $id;
   private $username;
   private $password_hash;
 
-  public function __construct($username, $password_hash) {
+  public function __construct($username, $password_hash)
+  {
     $this->username = $username;
     $this->password_hash = $password_hash;
   }
 
-  public function getId() {
+  public function getId()
+  {
     return $this->id;
   }
 
-  public function getUsername() {
+  public function getUsername()
+  {
     return $this->username;
   }
 
-  public function getPasswordHash() {
+  public function getPasswordHash()
+  {
     return $this->password_hash;
   }
 
-  public function setId($id) {
+  public function setId($id)
+  {
     $this->id = $id;
   }
 
-  public function setUsername($username) {
+  public function setUsername($username)
+  {
     $this->username = $username;
   }
 
-  public function setPasswordHash($password_hash) {
+  public function setPasswordHash($password_hash)
+  {
     $this->password_hash = $password_hash;
   }
 
-  public function __toString() {
+  public function __toString()
+  {
     return $this->username . ' ' . $this->password_hash;
   }
 }

@@ -1,18 +1,29 @@
 <?php
-require_once '../modele/RencontreDAO.php';
+require_once __DIR__ . '/../modele/RencontreDAO.php';
 
-class ToutesLesRencontres {
+class ToutesLesRencontres
+{
   private $DAO;
+  private $limit;
 
-  public function __construct() {
+  public function __construct($limit)
+  {
     $this->DAO = new RencontreDAO();
+    $this->limit = $limit;
   }
 
-  public function execute() {
-   return array(
-    'previous' => $this->DAO->getPrevious(),
-    'next' => $this->DAO->getNext()
-   );
+  public function execute()
+  {
+    if (isset($this->limit)) {
+      return [
+        'previous' => $this->DAO->getPrevious($this->limit),
+        'next' => $this->DAO->getNext($this->limit),
+      ];
+    }
+    return [
+      'previous' => $this->DAO->getPrevious(null),
+      'next' => $this->DAO->getNext(null),
+    ];
   }
 }
 ?>

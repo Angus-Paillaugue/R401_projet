@@ -1,16 +1,19 @@
 <?php
-require_once '../modele/RencontreDAO.php';
+require_once __DIR__ . '/../modele/RencontreDAO.php';
 
-class RecupererUneRequete {
+class RecupererUneRencontre
+{
   private $DAO;
   private $id;
 
-  public function __construct($id) {
+  public function __construct($id)
+  {
     $this->id = $id;
     $this->DAO = new RencontreDAO();
   }
 
-  public function execute() {
+  public function execute()
+  {
     return $this->DAO->get($this->id);
   }
 }
