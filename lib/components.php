@@ -6,7 +6,7 @@ use TailwindMerge\TailwindMerge;
  *
  * This class is a factory class that provides static methods to create various components.
  *
- * @package School\Lib\Components
+ * @package lib/components
  */
 class Components
 {
@@ -51,6 +51,7 @@ class Components
     $disabled = Components::merge($params, 'disabled', '', 'disabled');
     $href = Components::merge($params, 'href');
     $id = Components::merge($params, 'id');
+    $icon = Components::merge($params, 'icon');
     $variantClasses = [
       'primary' => 'bg-primary-600 text-white',
       'secondary' => 'bg-neutral-100 text-neutral-600',
@@ -68,14 +69,15 @@ class Components
     $baseClasses =
       'cursor-pointer transition-all duration-200 ease-in-out px-4 py-2 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center flex flex-row gap-2 text-center';
     $classes = $tw->merge($baseClasses, $variantClasses, $class);
+    $iconHTML = $icon != '' ? Components::Icon([ 'icon' => $icon ]) : '';
     if ($href) {
       echo "<a href='$href' " .
         ($id && 'id=' . $id) .
-        " class='$classes' $disabled type='$type'>$label</a>";
+        " class='$classes' $disabled type='$type'>$iconHTML $label</a>";
     } else {
       echo "<button type='submit' " .
         ($id && 'id=' . $id) .
-        " class='$classes' $disabled type='$type'>$label</button>";
+        " class='$classes' $disabled type='$type'>$iconHTML $label</button>";
     }
   }
 
@@ -177,6 +179,22 @@ class Components
     echo '<div ' .
       ($id && 'id=' . $id) .
       " class='$classes'>$icons[$variant]<p class='p-0 m-0'>$text</p></div>";
+  }
+
+  public static function Icon($params = []) {
+    $icon = Components::merge($params, 'icon');
+    if(!$icon) {
+      throw new Exception('Icon name is required');
+    }
+    $class = Components::merge($params, 'class');
+    $classes = TailwindMerge::instance()->merge("size-6", $class);
+    $iconPaths = [
+      'plus' => '<path d="M5 12h14"/><path d="M12 5v14"/>'
+    ];
+    if(!array_key_exists($icon, $iconPaths)) {
+      throw new Exception('Invalid icon name');
+    }
+    return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='$classes'>$iconPaths[$icon]</svg>";
   }
 }
 

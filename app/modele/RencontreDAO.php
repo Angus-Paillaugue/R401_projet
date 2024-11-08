@@ -1,5 +1,6 @@
 <?php
 require_once '../../lib/connector.php';
+require_once 'Rencontre.php';
 
 class RencontreDAO {
   private $conn;
@@ -8,10 +9,12 @@ class RencontreDAO {
     $this->conn = sql_connector::getInstance();
   }
 
-  public function get($rencontre) {
-    $id = $rencontre->getId();
+  public function get($id) {
     $data = $this->conn->run_query('SELECT * FROM rencontre WHERE id = ?;', $id);
     $data = $data[0];
+    $rencontre = new Rencontre($data['date_heure'], $data['equipe_adverse'], $data['lieu'], $data['resultat']);
+    $rencontre->setId($data['id']);
+    return $rencontre;
   }
 
   public function insert($rencontre) {
@@ -51,15 +54,39 @@ class RencontreDAO {
   }
 
   public function getAll() {
-    return $this->conn->run_query('SELECT * FROM rencontre;');
+    $rows =  $this->conn->run_query('SELECT * FROM rencontre;');
+    $rencontresArray = array();
+    foreach ($rows as $row) {
+      $rencontre = new Rencontre($row['date_heure'], $row['equipe_adverse'], $row['lieu'], $row['resultat']);
+      $rencontre->setId($rencontre['id']);
+      array_push($rencontresArray, $rencontre);
+    }
+
+    return $rencontresArray;
   }
 
   public function getNext() {
-    return $this->conn->run_query('SELECT * FROM rencontre WHERE date_heure > NOW() ORDER BY date_heure;');
+    $rows = $this->conn->run_query('SELECT * FROM rencontre WHERE date_heure > NOW() ORDER BY date_heure ASC;');
+    $nextRencontres = array();
+    foreach ($rows as $row) {
+      $rencontre = new Rencontre($row['date_heure'], $row['equipe_adverse'], $row['lieu'], $row['resultat']);
+      $rencontre->setId($row['id']);
+      array_push($nextRencontres, $rencontre);
+    }
+
+    return $nextRencontres;
   }
 
   public function getPrevious() {
-    return $this->conn->run_query('SELECT * FROM rencontre WHERE date_heure < NOW() ORDER BY date_heure;');
+    $rows = $this->conn->run_query('SELECT * FROM rencontre WHERE date_heure < NOW() ORDER BY date_heure DESC;');
+    $previousRencontres = array();
+    foreach ($rows as $row) {
+      $rencontre = new Rencontre($row['date_heure'], $row['equipe_adverse'], $row['lieu'], $row['resultat']);
+      $rencontre->setId($row['id']);
+      array_push($previousRencontres, $rencontre);
+    }
+
+    return $previousRencontres;
   }
 }
 ?>

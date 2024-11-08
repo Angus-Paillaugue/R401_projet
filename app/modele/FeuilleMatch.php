@@ -1,5 +1,5 @@
 <?php
-class FeuillMatch {
+class FeuilleMatch {
   private $id;
   private $id_rencontre;
   private $id_joueur;

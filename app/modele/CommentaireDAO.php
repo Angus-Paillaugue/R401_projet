@@ -1,5 +1,6 @@
 <?php
 require_once '../../lib/connector.php';
+require_once 'Commentaire.php';
 
 class CommentaireDAO {
   private $conn;
@@ -12,6 +13,10 @@ class CommentaireDAO {
     $id = $commentaire->getId();
     $data = $this->conn->run_query('SELECT * FROM commentaire WHERE id = ?;', $id);
     $data = $data[0];
+    $commentaire = new Commentaire($data['id_joueur'], $data['contenu']);
+    $commentaire->setId($data['id']);
+
+    return $commentaire;
   }
 
   public function insert($commentaire) {
@@ -44,7 +49,14 @@ class CommentaireDAO {
 
   public function getAll() {
     $data = $this->conn->run_query('SELECT * FROM commentaire;');
-    return $data;
+
+    $commentaires = array();
+    foreach ($data as $row) {
+      $commentaire = new Commentaire($row['id_joueur'], $row['contenu']);
+      $commentaire->setId($row['id']);
+      array_push($commentaires, $commentaire);
+    }
+    return $commentaires;
   }
 }
 ?>

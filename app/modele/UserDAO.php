@@ -1,5 +1,6 @@
 <?php
 require_once '../../lib/connector.php';
+require_once 'User.php';
 
 class UserDAO {
   private $conn;
@@ -12,6 +13,9 @@ class UserDAO {
     $username = $user->getId();
     $data = $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
     $data = $data[0];
+    $user = new User($data['username'], $data['password_hash']);
+
+    return $user;
   }
 
   public function insert($user) {
@@ -43,11 +47,29 @@ class UserDAO {
   }
 
   public function getAll() {
-    return $this->conn->run_query('SELECT * FROM user;');
+    $rows = $this->conn->run_query('SELECT * FROM user;');
+
+    $users = array();
+    foreach ($rows as $row) {
+      $user = new User($row['username'], $row['password_hash']);
+      $user->setId($row['id']);
+      array_push($users, $user);
+    }
+
+    return $users;
   }
 
   public function search($username) {
-    return $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
+    $rows = $this->conn->run_query('SELECT * FROM user WHERE username = ?;', $username);
+
+    $users = array();
+    foreach ($rows as $row) {
+      $user = new User($row['username'], $row['password_hash']);
+      $user->setId($row['id']);
+      array_push($users, $user);
+    }
+
+    return $users;
   }
 }
 ?>
