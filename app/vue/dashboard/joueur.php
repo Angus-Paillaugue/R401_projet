@@ -78,7 +78,13 @@ $joueur = $joueur->execute();
     ]);
     echo '</p>';
   } else {
-    echo '<h3>Commentaires</h3>';
+    echo '<div class="flex flex-row justify-between items-center"><h3>Commentaires</h3>';
+    Components::Button([
+      'label' => 'Ajouter un commentaire',
+      'href' => '/dashboard/add-commentaire.php?id=' . $joueur->getId(),
+      'class' => 'w-fit',
+    ]);
+    echo '</div>';
     foreach ($joueur->getCommentaires() as $commentaire) {
       echo "<div class='bg-neutral-50 p-4 rounded-lg border border-neutral-300/50 group/comment relative overflow-hidden'>";
       echo "<p class='text-base'>" . $commentaire->getContenu() . '</p>';

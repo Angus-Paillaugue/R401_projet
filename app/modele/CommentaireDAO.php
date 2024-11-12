@@ -42,11 +42,10 @@ class CommentaireDAO
     $id_joueur = $commentaire->getIdJoueur();
     $contenu = $commentaire->getContenu();
     $this->conn->run_query(
-      'UPDATE commentaire SET id_joueur = ?, contenu = ?, date = ? WHERE id = ?;',
+      'UPDATE commentaire SET id_joueur = ?, contenu = ?, updated_at = NOW() WHERE id = ?;',
       $id_joueur,
       $contenu,
-      $id,
-      date('Y-m-d H:i:s')
+      $id
     );
   }
 
@@ -74,7 +73,7 @@ class CommentaireDAO
   {
     $id_joueur = $joueur->getId();
     $data = $this->conn->run_query(
-      'SELECT * FROM commentaire WHERE id_joueur = ?;',
+      'SELECT * FROM commentaire WHERE id_joueur = ? ORDER BY updated_at DESC;',
       $id_joueur
     );
 
@@ -82,7 +81,7 @@ class CommentaireDAO
     foreach ($data as $row) {
       $commentaire = new Commentaire($row['id_joueur'], $row['contenu']);
       $commentaire->setId($row['id']);
-      $commentaire->setDate($row['date']);
+      $commentaire->setDate($row['updated_at']);
       array_push($commentaires, $commentaire);
     }
     return $commentaires;

@@ -81,7 +81,6 @@ class FeuilleMatchDAO
   public function update($feuilleMatch)
   {
     $id = $feuilleMatch->getId();
-    var_dump($id);
     if (!$id) {
       $this->insert($feuilleMatch);
       return;

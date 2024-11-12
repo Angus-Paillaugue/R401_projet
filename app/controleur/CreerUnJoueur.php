@@ -11,7 +11,6 @@ class CreerUnJoueur
   private $taille;
   private $poids;
   private $statut;
-  private $commentaire;
   private $DAO;
 
   public function __construct(
@@ -21,8 +20,7 @@ class CreerUnJoueur
     $date_naissance,
     $taille,
     $poids,
-    $statut,
-    $commentaire
+    $statut
   ) {
     $this->nom = $nom;
     $this->prenom = $prenom;
@@ -31,7 +29,6 @@ class CreerUnJoueur
     $this->taille = $taille;
     $this->poids = $poids;
     $this->statut = $statut;
-    $this->commentaire = $commentaire;
     $this->DAO = new JoueurDAO();
   }
 
@@ -45,7 +42,7 @@ class CreerUnJoueur
       $this->taille,
       $this->poids,
       $this->statut,
-      $this->commentaire
+      []
     );
     $insertedRow = $this->DAO->insert($joueur);
     $joueur->setId($insertedRow['id']);
