@@ -3,6 +3,7 @@ session_start();
 require_once __DIR__ . '/../../lib/components.php';
 require_once __DIR__ . '/../../lib/jwt.php';
 require_once __DIR__ . '/../../lib/cookies.php';
+require_once __DIR__ . '/../../lib/formatters.php';
 require_once __DIR__ . '/../../controleur/RecupererUneRencontre.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -44,7 +45,9 @@ $isInPast = new DateTime($rencontre->getDateHeure()) < new DateTime();
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
     <div class="bg-neutral-50 p-4 rounded-xl border border-neutral-300/50">
       <h4 class="text-2xl font-semibold"><?php echo $rencontre->getEquipeAdverse(); ?></h4>
-      <time class="text-base text-neutral-600 font-base"><?php echo $rencontre->getDateHeure(); ?></time>
+      <time class="text-base text-neutral-600 font-base"><?php echo Formatters::formatDateTime(
+        $rencontre->getDateHeure()
+      ); ?></time>
       <div class="text-neutral-600 text-lg font-semibold flex flex-row items-center gap-2">
         <?php
         echo Components::Icon([

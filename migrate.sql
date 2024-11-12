@@ -25,6 +25,7 @@ CREATE TABLE commentaire (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_joueur INT NOT NULL,
     contenu TEXT,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Définition des clés étrangères
     FOREIGN KEY (id_joueur) REFERENCES joueur(id) ON DELETE CASCADE

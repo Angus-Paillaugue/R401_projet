@@ -3,6 +3,7 @@ session_start();
 require_once __DIR__ . '/../../lib/components.php';
 require_once __DIR__ . '/../../lib/jwt.php';
 require_once __DIR__ . '/../../lib/cookies.php';
+require_once __DIR__ . '/../../lib/formatters.php';
 require_once __DIR__ . '/../../controleur/ListerToutesLesRencontres.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -55,7 +56,7 @@ $title = 'Dashboard ' . $payload['username'];
         $rencontre->getEquipeAdverse() .
         "</h4>
           <time class='text-base text-neutral-600 font-base'>" .
-        $rencontre->getDateHeure() .
+        Formatters::formatDateTime($rencontre->getDateHeure()) .
         "</time>
         </div>
         <p class='text-neutral-600 text-lg font-semibold'>" .
@@ -98,7 +99,7 @@ $title = 'Dashboard ' . $payload['username'];
         $rencontre->getEquipeAdverse() .
         "</h4>
           <time class='text-base text-neutral-600 font-base'>" .
-        $rencontre->getDateHeure() .
+        Formatters::formatDateTime($rencontre->getDateHeure()) .
         "</time>
         </div>
         <div class='flex flex-row items-end justify-between'>
