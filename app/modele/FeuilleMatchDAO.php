@@ -81,6 +81,11 @@ class FeuilleMatchDAO
   public function update($feuilleMatch)
   {
     $id = $feuilleMatch->getId();
+    var_dump($id);
+    if (!$id) {
+      $this->insert($feuilleMatch);
+      return;
+    }
     $id_rencontre = $feuilleMatch->getIdRencontre();
     $id_joueur = $feuilleMatch->getIdJoueur();
     $role_debut = $feuilleMatch->getRoleDebut();
@@ -124,6 +129,14 @@ class FeuilleMatchDAO
       array_push($dataArray, $feuillMatch);
     }
     return $dataArray;
+  }
+
+  public function deleteForRencontre($id)
+  {
+    $this->conn->run_query(
+      'DELETE FROM feuille_match WHERE id_rencontre = ?;',
+      $id
+    );
   }
 }
 ?>

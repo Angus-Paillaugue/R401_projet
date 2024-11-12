@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../lib/jwt.php';
 require_once __DIR__ . '/../../lib/cookies.php';
 require_once __DIR__ . '/../../controleur/RecupererUneRencontre.php';
 require_once __DIR__ . '/../../controleur/ListerTousLesJoueurs.php';
+require_once __DIR__ . '/../../controleur/ModifierUneRencontre.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -26,11 +27,44 @@ $title = 'Modifier une rencontre';
 if (!isset($_GET['id'])) {
   throw new Exception('ID de la rencontre non fourni');
 }
+
 $rencontre = new RecupererUneRencontre($_GET['id']);
 $rencontre = $rencontre->execute();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $rencontre = new RecupererUneRencontre($_GET['id']);
+  $rencontre = $rencontre->execute();
+  $rencontre->setEquipeAdverse($_POST['nom']);
+  $rencontre->setDateHeure($_POST['date_heure']);
+  $rencontre->setLieu($_POST['lieu']);
+  $rencontre->setResultat($_POST['resultat']);
+  $rencontre->setFeuilleMatch([]);
+  for ($i = 0; $i < 16; $i++) {
+    $feuille = new FeuilleMatch(
+      $rencontre->getId(),
+      intval($_POST['joueur_' . $i]),
+      $_POST['role_debut_' . $i],
+      $_POST['role_fin_' . $i],
+      $_POST['poste_' . $i],
+      intval($_POST['evaluation_' . $i])
+    );
+    if ($_POST['id_feuille_' . $i]) {
+      $feuille->setId(intval($_POST['id_feuille_' . $i]));
+    }
+    $feuilles = $rencontre->getFeuilleMatch();
+    $feuilles[] = $feuille;
+    $rencontre->setFeuilleMatch($feuilles);
+  }
+  $update = new ModifierUneRencontre($rencontre);
+  $update->execute();
+  header('Location: /dashboard/edit-rencontre.php?id=' . $rencontre->getId());
+}
 ?>
 
-<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50">
+<form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
+  '?' .
+  http_build_query(
+    $_GET
+  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50">
   <h2>Modifier une rencontre</h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,16 +100,30 @@ $rencontre = $rencontre->execute();
     <h3 class="col-span-2">Feuilles de match</h3>
     <?php
     $allPlayers = (new ListerTousLesJoueurs())->execute();
-    foreach ($rencontre->getFeuilleMatch() as $feuille) {
+    for ($i = 0; $i < 16; $i++) {
+      $feuille = $rencontre->getFeuilleMatch()
+        ? $rencontre->getFeuilleMatch()[$i]
+        : null;
       echo "<div class='p-4 rounded-lg border gap-4 border-neutral-300/50 grid grid-cols-2'>";
+
+      // Id feuille
+      if ($feuille) {
+        echo "<input type='hidden' name='id_feuille_" .
+          $i .
+          "' id='id_feuille_" .
+          $i .
+          "' value='" .
+          $feuille->getId() .
+          "' class='hidden invisible'>";
+      }
 
       // Joueur
       Components::Select([
         'label' => 'Joueur',
-        'id' => 'joueur_' . $feuille->getId(),
+        'id' => 'joueur_' . $i,
         'options' => array_reduce(
           $allPlayers,
-          function ($acc, $joueur) use ($feuille) {
+          function ($acc, $joueur) {
             $acc[$joueur->getId()] = [
               'text' => $joueur->getPrenom() . ' ' . $joueur->getNom(),
               'value' => $joueur->getId(),
@@ -84,38 +132,38 @@ $rencontre = $rencontre->execute();
           },
           []
         ),
-        'value' => $feuille->getIdJoueur(),
+        'value' => $feuille ? $feuille->getIdJoueur() : null,
       ]);
 
       // Poste
       Components::Input([
         'label' => 'Poste',
-        'id' => 'poste_' . $feuille->getId(),
-        'value' => $feuille->getPoste(),
+        'id' => 'poste_' . $i,
+        'value' => $feuille ? $feuille->getPoste() : null,
       ]);
 
       // Rôle
       echo "<div class='block'><p class='text-neutral-600 font-medium text-base mb-1 block'>Rôle</p>";
       echo "<div class='flex items-center'>";
       Components::Select([
-        'id' => 'role_' . $feuille->getId(),
+        'id' => 'role_debut_' . $i,
         'options' => [
           'titulaire' => 'Titulaire',
           'remplacant' => 'Remplaçant',
         ],
-        'value' => $feuille->getRoleDebut(),
+        'value' => $feuille ? $feuille->getRoleDebut() : null,
       ]);
       echo Components::Icon([
         'icon' => 'arrowRight',
-        'class' => 'shrink-0 size-6 text-neutral-600',
+        'class' => 'shrink-0 size-5 text-neutral-600',
       ]);
       Components::Select([
-        'id' => 'role_' . $feuille->getId(),
+        'id' => 'role_fin_' . $i,
         'options' => [
           'titulaire' => 'Titulaire',
           'remplacant' => 'Remplaçant',
         ],
-        'value' => $feuille->getRoleFin(),
+        'value' => $feuille ? $feuille->getRoleFin() : null,
       ]);
       echo '</div>';
       echo '</div>';
@@ -124,7 +172,7 @@ $rencontre = $rencontre->execute();
       echo "<div class='block'><p class='text-neutral-600 font-medium text-base mb-1 block'>Évaluation</p>";
       echo "<div class='flex items-center'>";
       Components::Select([
-        'id' => 'evaluation_' . $feuille->getId(),
+        'id' => 'evaluation_' . $i,
         'options' => [
           '1' => '1',
           '2' => '2',
@@ -132,7 +180,7 @@ $rencontre = $rencontre->execute();
           '4' => '4',
           '5' => '5',
         ],
-        'value' => $feuille->getEvaluation(),
+        'value' => $feuille ? $feuille->getEvaluation() : null,
       ]);
       echo '</div>';
       echo '</div>';
@@ -157,7 +205,7 @@ $rencontre = $rencontre->execute();
     ]);
     ?>
   </div>
-</div>
+</form>
 
 <?php
 $content = ob_get_clean();

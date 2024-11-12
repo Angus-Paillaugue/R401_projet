@@ -65,6 +65,14 @@ class RencontreDAO
       $resultat,
       $id
     );
+
+    $feuilleMatch = $rencontre->getFeuilleMatch();
+    if ($feuilleMatch) {
+      $feuilleMatchDAO = new FeuilleMatchDAO();
+      foreach ($feuilleMatch as $feuille) {
+        $feuilleMatchDAO->update($feuille);
+      }
+    }
   }
 
   public function delete($rencontre)
@@ -97,7 +105,7 @@ class RencontreDAO
       $limit = 'LIMIT ' . $limit;
     }
     $sql =
-      'SELECT * FROM rencontre WHERE date_heure < NOW() ORDER BY date_heure ASC ' .
+      'SELECT * FROM rencontre WHERE date_heure > NOW() ORDER BY date_heure ASC ' .
       $limit .
       ';';
     $rows = $this->conn->run_query($sql);

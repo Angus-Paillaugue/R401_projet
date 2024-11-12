@@ -105,7 +105,7 @@ class sql_connector
   /**
    * Prevent unserializing of the instance.
    */
-  private function __wakeup()
+  public function __wakeup()
   {
     // Prevent unserializing
   }

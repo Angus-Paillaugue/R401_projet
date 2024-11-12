@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__) . 'app/lib/jwt.php';
-require_once dirname(__DIR__) . 'app/lib/cookies.php';
+require_once __DIR__ . '/../lib/jwt.php';
+require_once __DIR__ . '/../lib/cookies.php';
 
 $jwt = Cookies::getCookie('token');
 
