@@ -11,17 +11,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ob_start();
 
-$jwt = Cookies::getCookie('token');
-$payload = null;
-
-if ($jwt) {
-  $payload = JWT::validateJWT($jwt);
-  if (!$payload) {
-    header('Location: log-in.php', true, 303);
-  }
-} else {
-  header('Location: log-in.php', true, 303);
-}
 $title = 'Rencontre';
 
 if (!isset($_GET['id'])) {

@@ -12,17 +12,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ob_start();
 
+// Cookie exists and is valid because it's been already validated in the ../layout.php
 $jwt = Cookies::getCookie('token');
-$payload = null;
-
-if ($jwt) {
-  $payload = JWT::validateJWT($jwt);
-  if (!$payload) {
-    header('Location: log-in.php', true, 303);
-  }
-} else {
-  header('Location: log-in.php', true, 303);
-}
+$token = $_COOKIE['token'];
+$payload = JWT::validateJWT($token);
 $title = 'Dashboard ' . $payload['username'];
 
 try {
