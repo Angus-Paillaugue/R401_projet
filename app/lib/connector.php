@@ -94,6 +94,29 @@ class sql_connector
     }
   }
 
+  public function insert($sql, ...$params)
+  {
+    try {
+      // Ensure the number of placeholders matches the number of parameters
+      if (substr_count($sql, '?') !== count($params)) {
+        throw new InvalidArgumentException(
+          'Number of bound variables does not match number of tokens'
+        );
+      }
+      $stmt = $this->pdo->prepare($sql);
+      $this->pdo->beginTransaction();
+      $stmt->execute($params);
+      $lastInsertId = intval($this->pdo->lastInsertId());
+      $this->pdo->commit();
+
+      return $lastInsertId;
+    } catch (PDOException $e) {
+      $this->pdo->rollBack();
+      echo 'Query failed: ' . $e->getMessage();
+      return false;
+    }
+  }
+
   /**
    * Prevent cloning of the instance.
    */

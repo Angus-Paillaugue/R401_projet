@@ -27,8 +27,13 @@ if (!isset($_GET['id'])) {
   throw new Exception('ID du joueur non fourni');
 }
 
-$joueur = new RecupererUnJoueur($_GET['id']);
-$joueur = $joueur->execute();
+try {
+  $joueur = new RecupererUnJoueur($_GET['id']);
+  $joueur = $joueur->execute();
+} catch (Exception $e) {
+  echo $e->getMessage();
+  exit();
+}
 ?>
 
 <div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50">
@@ -87,20 +92,20 @@ $joueur = $joueur->execute();
     echo '</div>';
     foreach ($joueur->getCommentaires() as $commentaire) {
       echo "<div class='bg-neutral-50 p-4 rounded-lg border border-neutral-300/50 group/comment relative overflow-hidden'>";
-      echo "<p class='text-base'>" . $commentaire->getContenu() . '</p>';
+      echo "<p class='text-base whitespace-pre-wrap'>" .
+        $commentaire->getContenu() .
+        '</p>';
       echo "<time class='text-sm text-neutral-600'>" .
         Formatters::formatDateTime($commentaire->getDate()) .
         '</time>';
-      echo "<div class='opacity-0 transition-opacity group-hover/comment:opacity-100 absolute top-0 right-0 bottom-0 grid grid-cols-1 gris-rows-2'>";
+      echo "<div class='opacity-0 transition-opacity group-hover/comment:opacity-100 bottom-0 absolute top-0 right-0 flex flex-col justify-between'>";
       Components::Button([
         'label' => 'Modifier',
-        'class' => 'rounded-none',
         'href' => '/dashboard/edit-commentaire.php?id=' . $commentaire->getId(),
       ]);
       Components::Button([
         'label' => 'Supprimer',
         'variant' => 'danger',
-        'class' => 'rounded-none',
         'href' =>
           '/dashboard/delete-commentaire.php?id=' .
           $commentaire->getId() .

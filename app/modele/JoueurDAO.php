@@ -23,10 +23,10 @@ class JoueurDAO
       $data['numero_licence'],
       $data['date_naissance'],
       $data['taille'],
-      $data['poids'],
-      $data['statut']
+      $data['poids']
     );
     $joueur->setId($data['id']);
+    $joueur->setStatut($data['statut']);
     $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
     $joueur->setCommentaires($commentaires);
 
@@ -42,7 +42,7 @@ class JoueurDAO
     $taille = $joueur->getTaille();
     $poids = $joueur->getPoids();
     $statut = $joueur->getStatut();
-    $insertedRow = $this->conn->run_query(
+    $insertedRowId = $this->conn->insert(
       'INSERT INTO joueur (nom, prenom, numero_licence, date_naissance, taille, poids, statut) VALUES (?, ?, ?, ?, ?, ?, ?);',
       $nom,
       $prenom,
@@ -52,7 +52,7 @@ class JoueurDAO
       $poids,
       $statut
     );
-    return $insertedRow;
+    return $insertedRowId;
   }
 
   public function update($joueur)
@@ -95,10 +95,10 @@ class JoueurDAO
         $row['numero_licence'],
         $row['date_naissance'],
         $row['taille'],
-        $row['poids'],
-        $row['statut']
+        $row['poids']
       );
       $joueur->setId($row['id']);
+      $joueur->setStatut($row['statut']);
       $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
       $joueur->setCommentaires($commentaires);
       array_push($joueursArray, $joueur);
@@ -121,10 +121,10 @@ class JoueurDAO
         $row['numero_licence'],
         $row['date_naissance'],
         $row['taille'],
-        $row['poids'],
-        $row['statut']
+        $row['poids']
       );
       $joueur->setId($row['id']);
+      $joueur->setStatut($row['statut']);
       $commentaires = (new CommentaireDAO())->getAllForJoueur($joueur);
       $joueur->setCommentaires($commentaires);
       array_push($joueursArray, $joueur);

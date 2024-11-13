@@ -131,6 +131,7 @@ class Components
   public static function Input($params = [])
   {
     $id = Components::merge($params, 'id', false);
+    unset($params['id']);
     if (!$id) {
       throw new Exception('Input field must have an ID');
     }
@@ -140,6 +141,7 @@ class Components
       '',
       "<label for='input'>" . Components::merge($params, 'label') . '</label>'
     );
+    unset($params['label']);
     $placeholder = htmlspecialchars(
       Components::merge(
         $params,
@@ -148,18 +150,36 @@ class Components
       ),
       ENT_QUOTES
     );
+    unset($params['placeholder']);
     $type = Components::merge($params, 'type', 'text');
+    unset($params['type']);
     $class = Components::merge($params, 'class');
+    unset($params['class']);
     $disabled = Components::merge($params, 'disabled', '', 'disabled');
+    unset($params['disabled']);
     $value = Components::merge($params, 'value');
+    unset($params['value']);
     $name = Components::merge($params, 'name', $id);
+    unset($params['name']);
     if ($value) {
       $value = "value='$value'";
+    }
+    $restProps = $params;
+    $restPropsString = '';
+    foreach ($restProps as $key => $value) {
+      if ($value === true) {
+        $restPropsString .= "$key='true'";
+        continue;
+      } elseif ($value === false) {
+        $restPropsString .= "$key='false'";
+        continue;
+      }
+      $restPropsString .= "$key='$value' ";
     }
     echo "
         <div class='block w-full'>
           $label
-          <input type='$type' $value id='$id' name='$name' class='$class' placeholder='$placeholder' $disabled />
+          <input type='$type' $value id='$id' name='$name' class='$class' placeholder='$placeholder' $disabled $restPropsString />
         </div>
       ";
   }

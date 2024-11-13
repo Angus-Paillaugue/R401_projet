@@ -108,13 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       // Id feuille
       if ($feuille) {
-        echo "<input type='hidden' name='id_feuille_" .
-          $i .
-          "' id='id_feuille_" .
-          $i .
-          "' value='" .
-          $feuille->getId() .
-          "' class='hidden invisible'>";
+        Components::Input([
+          'id' => 'id_feuille_' . $i,
+          'value' => $feuille->getId(),
+          'type' => 'hidden',
+        ]);
       }
 
       // Joueur

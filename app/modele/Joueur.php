@@ -17,8 +17,7 @@ class Joueur
     $numero_licence,
     $date_naissance,
     $taille,
-    $poids,
-    $statut
+    $poids
   ) {
     $this->nom = $nom;
     $this->prenom = $prenom;
@@ -26,7 +25,7 @@ class Joueur
     $this->date_naissance = $date_naissance;
     $this->taille = $taille;
     $this->poids = $poids;
-    $this->statut = $statut;
+    $this->statut = 'Actif';
   }
 
   public function getId()
