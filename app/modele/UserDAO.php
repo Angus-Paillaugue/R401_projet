@@ -18,6 +18,9 @@ class UserDAO
       'SELECT * FROM user WHERE username = ?;',
       $username
     );
+    if (count($data) == 0) {
+      throw new Exception('User not found');
+    }
     $data = $data[0];
     $user = new User($data['username'], $data['password_hash']);
 

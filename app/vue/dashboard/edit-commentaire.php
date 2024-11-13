@@ -3,6 +3,7 @@ session_start();
 require_once __DIR__ . '/../../lib/components.php';
 require_once __DIR__ . '/../../lib/jwt.php';
 require_once __DIR__ . '/../../lib/cookies.php';
+require_once __DIR__ . '/../../lib/error.php';
 require_once __DIR__ . '/../../controleur/RecupererUnCommentaire.php';
 require_once __DIR__ . '/../../controleur/ModifierUnCommentaire.php';
 require_once __DIR__ . '/../../controleur/RecupererUnJoueur.php';
@@ -26,14 +27,19 @@ if ($jwt) {
 $title = 'Modifier un commentaire';
 
 if (!isset($_GET['id'])) {
-  throw new Exception('ID du commentaire non fourni');
+  ErrorHandling::setFatalError('ID du commentaire non fourni');
 }
 
-$commentaire = new RecupererUnCommentaire($_GET['id']);
-$commentaire = $commentaire->execute();
+try {
+  $commentaire = (new RecupererUnCommentaire($_GET['id']))->execute();
+} catch (Exception $e) {
+  ErrorHandling::setFatalError($e->getMessage());
+}
+
 $joueur = new RecupererUnJoueur($commentaire->getIdJoueur());
 $joueur = $joueur->execute();
 
+// Si le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $commentaire = new Commentaire($joueur->getId(), $_POST['commentaire']);
   $commentaire->setId($_GET['id']);
@@ -46,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   '?' .
   http_build_query(
     $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50">
+  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900">
   <h1>
     Modifier un commentaire
   </h1>
-  <textarea name="commentaire" id="commentaire" class="w-full h-32 border border-neutral-300/50 rounded-lg p-2" placeholder="Entrez votre commentaire ici"><?php echo $commentaire->getContenu(); ?></textarea>
+  <textarea name="commentaire" id="commentaire" class="w-full h-32 border border-neutral-900 rounded-lg p-2" placeholder="Entrez votre commentaire ici"><?php echo $commentaire->getContenu(); ?></textarea>
 
   <?php Components::Button([
     'label' => 'Enregistrer',

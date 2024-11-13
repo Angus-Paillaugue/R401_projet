@@ -18,6 +18,9 @@ class RencontreDAO
       'SELECT * FROM rencontre WHERE id = ?;',
       $id
     );
+    if (count($data) == 0) {
+      throw new Exception('Rencontre non trouvée');
+    }
     $data = $data[0];
     $rencontre = new Rencontre(
       $data['date_heure'],
@@ -148,6 +151,52 @@ class RencontreDAO
     }
 
     return $previousRencontres;
+  }
+
+  public function getStatistics()
+  {
+    $sql = "SELECT
+      (SELECT COUNT(*) FROM rencontre WHERE resultat = 'Victoire') as nbMatchGagnes,
+      (SELECT COUNT(*) FROM rencontre WHERE resultat = 'Defaite') as nbMatchPerdus,
+      (SELECT COUNT(*) FROM rencontre WHERE resultat = 'Nul') as nbMatchNuls,
+      (SELECT COUNT(*) FROM rencontre) as nbMatchTotal;";
+    $rows = $this->conn->run_query($sql);
+
+    $playersStatsSQL = "SELECT
+      joueur.prenom,
+      joueur.nom,
+      joueur.id,
+
+      -- Poste with the highest number of wins for each joueur
+      (SELECT poste
+      FROM feuille_match fm
+      JOIN rencontre r ON fm.id_rencontre = r.id
+      WHERE fm.id_joueur = joueur.id AND r.resultat = 'Victoire'
+      GROUP BY poste
+      ORDER BY COUNT(*) DESC
+      LIMIT 1) AS poste_max_victoire,
+
+      -- Number of times the player was a 'Remplaçant' in either role_debut or role_fin
+      COUNT(CASE WHEN feuille_match.role_debut = 'Remplaçant' OR feuille_match.role_fin = 'Remplaçant' THEN 1 END) AS nbRemplacant,
+      COUNT(CASE WHEN feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire' THEN 1 END) AS nbTitulaire,
+
+      -- Average evaluation score for the player
+      AVG(feuille_match.evaluation) AS moyenne_notes,
+
+      -- Win percentage when the player was 'Titulaire' at either the start or the end of the match
+      (100.0 * COUNT(CASE WHEN (feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire') AND rencontre.resultat = 'Victoire' THEN 1 END) /
+      NULLIF(COUNT(CASE WHEN feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire' THEN 1 END), 0)) AS pourcentage_victoire_titulaire
+    FROM joueur
+    LEFT JOIN feuille_match ON joueur.id = feuille_match.id_joueur
+    LEFT JOIN rencontre ON feuille_match.id_rencontre = rencontre.id
+
+    GROUP BY joueur.id;";
+
+    $playersStats = $this->conn->run_query($playersStatsSQL);
+    return [
+      'club' => $rows[0],
+      'joueurs' => $playersStats,
+    ];
   }
 }
 ?>

@@ -25,7 +25,7 @@ if ($jwt) {
 $title = 'Modifier un joueur';
 
 if (!isset($_GET['id'])) {
-  throw new Exception('ID du joueur non fourni');
+  ErrorHandling::setFatalError('ID du joueur non valide');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -64,15 +64,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   header('Location: joueur.php?id=' . $_GET['id'], true, 303);
 }
 
-$joueur = new RecupererUnJoueur($_GET['id']);
-$joueur = $joueur->execute();
+try {
+  $joueur = (new RecupererUnJoueur($_GET['id']))->execute();
+} catch (Exception $e) {
+  ErrorHandling::setFatalError($e->getMessage());
+}
 ?>
 
 <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
   '?' .
   http_build_query(
     $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50">
+  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900">
   <h1>
     Modifier un joueur
   </h1>

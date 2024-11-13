@@ -53,13 +53,10 @@ class Components
     $id = Components::merge($params, 'id');
     $icon = Components::merge($params, 'icon');
     $variantClasses = [
-      'primary' => 'bg-primary-600 text-white',
-      'secondary' => 'bg-neutral-100 text-neutral-600',
+      'primary' => 'bg-primary-700 text-neutral-200',
+      'secondary' => 'bg-neutral-700 text-neutral-400',
       'ghost' => 'border text-neutral-600',
       'danger' => 'bg-red-600 text-white',
-      'warning' => 'bg-yellow-600 text-white',
-      'info' => 'bg-primary-600 text-white',
-      'success' => 'bg-green-600 text-white',
       'square' => 'size-10',
     ];
     $variantClasses = implode(
@@ -67,7 +64,7 @@ class Components
       array_map(fn($val) => $variantClasses[$val], explode(' ', $variant))
     );
     $baseClasses =
-      'cursor-pointer transition-all duration-200 ease-in-out px-4 py-2 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center flex flex-row gap-2 text-center';
+      'cursor-pointer transition-all duration-200 ease-in-out px-4 py-2 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center flex flex-row gap-2 text-center active:scale-95';
     $classes = $tw->merge($baseClasses, $variantClasses, $class);
     $iconHTML = $icon != '' ? Components::Icon(['icon' => $icon]) : '';
     if ($href) {
@@ -102,12 +99,12 @@ class Components
     if (Components::merge($params, 'disabled')) {
       $class = $tw->merge(
         $class,
-        'cursor-not-allowed text-neutral-500 hover:text-neutral-500 no-underline'
+        'cursor-not-allowed text-neutral-400 hover:text-neutral-400 no-underline'
       );
       $href = '#';
     }
     $classes = $tw->merge(
-      'cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-900 hover:text-primary-600 underline transition-colors',
+      'cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-100 hover:text-neutral-400 underline transition-colors active:scale-95',
       $class
     );
     echo "<a href='$href' " .
@@ -189,44 +186,53 @@ class Components
    *   - 'text' (string): The text content to be displayed in the component.
    *   - 'variant' (string): The variant type of the component. Defaults to 'primary'.
    *     Possible values are 'danger', 'warning', 'success', and 'info'.
-   *   - 'class' (string): Additional CSS classes to be applied to the component.
    *
    *  @return string The HTML string representing the input component.
    */
   public static function Alert($params = [])
   {
-    $tw = TailwindMerge::instance();
     $text = Components::merge($params, 'text');
     $variant = Components::merge($params, 'variant', 'danger');
-    $class = Components::merge($params, 'class');
-    $id = Components::merge($params, 'id');
-    $variantClasses = [
-      'danger' => 'bg-red-50 text-red-600 border-red-200',
-      'warning' => 'bg-yellow-50 text-yellow-600 border-yellow-200',
-      'success' => 'bg-green-50 text-green-600 border-green-200',
-      'info' => 'bg-primary-50 text-primary-600 border-primary-200',
+    $alertClasses = [
+      'danger' => 'bg-neutral-800 text-red-400',
+      'warning' => 'bg-neutral-800 text-yellow-400',
+      'success' => 'bg-neutral-800 text-green-400',
+      'info' => 'bg-neutral-800 text-blue-400',
     ];
     $icons = [
       'danger' =>
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-10"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>',
+        '<path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/>',
       'warning' =>
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-10"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+        '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
       'success' =>
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-10"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>',
+        '<path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/>',
       'info' =>
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-10"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+        '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
     ];
-    if (!array_key_exists($variant, $variantClasses)) {
+    $alertTtiles = [
+      'danger' => 'Erreur',
+      'warning' => 'Attention',
+      'success' => 'Succès',
+      'info' => 'Information',
+    ];
+    $alertTemplate = '
+      <div class="flex items-center p-4 mb-4 rounded-lg {classes}" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 size-4">{icon}</svg>
+        <span class="sr-only">{title}</span>
+        <div class="ms-3 text-sm font-medium">
+          {text}
+        </div>
+      </div>';
+    if (!array_key_exists($variant, $alertTtiles)) {
       throw new Exception('Invalid variant type');
     }
-    $classes = $tw->merge(
-      'rounded-lg px-4 py-2 flex flex-row border gap-4 items-center',
-      $variantClasses[$variant],
-      $class
-    );
-    echo '<div ' .
-      ($id && 'id=' . $id) .
-      " class='$classes'>$icons[$variant]<p class='p-0 m-0'>$text</p></div>";
+
+    $error = str_replace('{text}', $text, $alertTemplate);
+    $error = str_replace('{classes}', $alertClasses[$variant], $error);
+    $error = str_replace('{icon}', $icons[$variant], $error);
+    $error = str_replace('{title}', $alertTtiles[$variant], $error);
+
+    echo $error;
   }
 
   /**
@@ -261,6 +267,10 @@ class Components
         '<circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/>',
       'status' =>
         '<circle cx="10" cy="7" r="4"/><path d="M10.3 15H7a4 4 0 0 0-4 4v2"/><circle cx="17" cy="17" r="3"/><path d="m21 21-1.9-1.9"/>',
+      'chart' =>
+        '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
+      'poste' =>
+        '<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>',
     ];
     if (!array_key_exists($icon, $iconPaths)) {
       throw new Exception('Invalid icon name');
@@ -268,6 +278,20 @@ class Components
     return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='$classes'>$iconPaths[$icon]</svg>";
   }
 
+  /**
+   * Generates and outputs a select dropdown component.
+   *
+   * @param array $params An associative array of parameters for the select component.
+   *                      - 'id' (string, required): The ID of the select element.
+   *                      - 'label' (string, optional): The label text for the select element.
+   *                      - 'class' (string, optional): The CSS class for the select element.
+   *                      - 'disabled' (bool, optional): Whether the select element is disabled.
+   *                      - 'name' (string, optional): The name attribute for the select element.
+   *                      - 'options' (array, optional): An array of options for the select element. Each option can be a string or an associative array with 'value' and 'text' keys.
+   *                      - 'value' (string, optional): The value of the option to be selected by default.
+   *
+   * @throws Exception If the 'id' parameter is not provided.
+   */
   public static function Select($params = [])
   {
     $id = Components::merge($params, 'id', false);

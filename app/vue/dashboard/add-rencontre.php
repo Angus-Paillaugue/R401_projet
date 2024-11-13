@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   '?' .
   http_build_query(
     $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50">
+  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-900">
   <h2>Ajouter une rencontre</h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

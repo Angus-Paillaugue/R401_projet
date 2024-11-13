@@ -15,6 +15,9 @@ class JoueurDAO
   public function get($id)
   {
     $data = $this->conn->run_query('SELECT * FROM joueur WHERE id = ?;', $id);
+    if (count($data) == 0) {
+      throw new Exception('Joueur non trouvé');
+    }
     $data = $data[0];
 
     $joueur = new Joueur(
@@ -131,6 +134,18 @@ class JoueurDAO
     }
 
     return $joueursArray;
+  }
+
+  public function getStatistics($joueur)
+  {
+    $id = $joueur->getId();
+    $data = $this->conn->run_query(
+      'SELECT poste, COUNT(poste) as count FROM feuille_match WHERE id_joueur = ? GROUP BY poste ORDER BY count DESC LIMIT 1;',
+      $id
+    );
+    return [
+      'poste' => $data[0]['poste'],
+    ];
   }
 }
 ?>

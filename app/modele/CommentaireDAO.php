@@ -17,6 +17,9 @@ class CommentaireDAO
       'SELECT * FROM commentaire WHERE id = ?;',
       $id
     );
+    if (count($data) == 0) {
+      throw new Exception('Commentaire non trouvé');
+    }
     $data = $data[0];
     $commentaire = new Commentaire($data['id_joueur'], $data['contenu']);
     $commentaire->setId($data['id']);

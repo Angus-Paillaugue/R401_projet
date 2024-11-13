@@ -18,6 +18,9 @@ class FeuilleMatchDAO
       'SELECT * FROM feuille_match WHERE id = ?;',
       $id
     );
+    if (count($data) == 0) {
+      throw new Exception('Feuille de match non trouvée');
+    }
     $data = $data[0];
     $feuilleMatch = new FeuilleMatch(
       $data['id_rencontre'],
