@@ -197,7 +197,7 @@ class Components
   {
     $tw = TailwindMerge::instance();
     $text = Components::merge($params, 'text');
-    $variant = Components::merge($params, 'variant', 'primary');
+    $variant = Components::merge($params, 'variant', 'danger');
     $class = Components::merge($params, 'class');
     $id = Components::merge($params, 'id');
     $variantClasses = [

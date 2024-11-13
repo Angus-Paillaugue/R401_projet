@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
   $update = new ModifierUneRencontre($rencontre);
   $update->execute();
-  header('Location: /dashboard/edit-rencontre.php?id=' . $rencontre->getId());
+  header('Location: /dashboard/rencontre.php?id=' . $rencontre->getId());
 }
 ?>
 
@@ -108,11 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       // Id feuille
       if ($feuille) {
-        Components::Input([
-          'id' => 'id_feuille_' . $i,
-          'value' => $feuille->getId(),
-          'type' => 'hidden',
-        ]);
+        echo "<input type='hidden' name='id_feuille_" .
+          $i .
+          " id='id_feuille_" .
+          $i .
+          "' value='" .
+          $feuille->getId() .
+          "' class='hidden invisible'>";
       }
 
       // Joueur

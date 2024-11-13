@@ -66,7 +66,7 @@ class FeuilleMatchDAO
     $role_fin = $feuilleMatch->getRoleFin();
     $poste = $feuilleMatch->getPoste();
     $evaluation = $feuilleMatch->getEvaluation();
-    $insertedRow = $this->conn->run_query(
+    $insertedRowId = $this->conn->insert(
       'INSERT INTO feuille_match (id_rencontre, id_joueur, role_debut, role_fin, poste, evaluation) VALUES (?, ?, ?, ?, ?, ?);',
       $id_rencontre,
       $id_joueur,
@@ -75,7 +75,7 @@ class FeuilleMatchDAO
       $poste,
       $evaluation
     );
-    return $insertedRow;
+    return $insertedRowId;
   }
 
   public function update($feuilleMatch)

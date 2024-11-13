@@ -22,10 +22,10 @@ class RencontreDAO
     $rencontre = new Rencontre(
       $data['date_heure'],
       $data['equipe_adverse'],
-      $data['lieu'],
-      $data['resultat']
+      $data['lieu']
     );
     $rencontre->setId($data['id']);
+    $rencontre->setResultat($data['resultat']);
 
     $feuilleMatch = (new FeuilleMatchDAO())->getForRencontre(
       $rencontre->getId()
@@ -40,14 +40,14 @@ class RencontreDAO
     $equipe_adverse = $rencontre->getEquipeAdverse();
     $lieu = $rencontre->getLieu();
     $resultat = $rencontre->getResultat();
-    $insertedRow = $this->conn->run_query(
+    $insertedRowId = $this->conn->insert(
       'INSERT INTO rencontre (date_heure, equipe_adverse, lieu, resultat) VALUES (?, ?, ?, ?);',
       $date_heure,
       $equipe_adverse,
       $lieu,
       $resultat
     );
-    return $insertedRow;
+    return $insertedRowId;
   }
 
   public function update($rencontre)
@@ -89,10 +89,11 @@ class RencontreDAO
       $rencontre = new Rencontre(
         $row['date_heure'],
         $row['equipe_adverse'],
-        $row['lieu'],
-        $row['resultat']
+        $row['lieu']
       );
-      $rencontre->setId($rencontre['id']);
+      $rencontre->setId($row['id']);
+      $rencontre->setResultat($row['resultat']);
+
       array_push($rencontresArray, $rencontre);
     }
 
@@ -114,10 +115,10 @@ class RencontreDAO
       $rencontre = new Rencontre(
         $row['date_heure'],
         $row['equipe_adverse'],
-        $row['lieu'],
-        $row['resultat']
+        $row['lieu']
       );
       $rencontre->setId($row['id']);
+      $rencontre->setResultat($row['resultat']);
       array_push($nextRencontres, $rencontre);
     }
 
@@ -139,10 +140,10 @@ class RencontreDAO
       $rencontre = new Rencontre(
         $row['date_heure'],
         $row['equipe_adverse'],
-        $row['lieu'],
-        $row['resultat']
+        $row['lieu']
       );
       $rencontre->setId($row['id']);
+      $rencontre->setResultat($row['resultat']);
       array_push($previousRencontres, $rencontre);
     }
 

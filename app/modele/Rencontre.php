@@ -8,12 +8,11 @@ class Rencontre
   private $resultat;
   private $feuille_match;
 
-  public function __construct($date_heure, $equipe_adverse, $lieu, $resultat)
+  public function __construct($date_heure, $equipe_adverse, $lieu)
   {
     $this->date_heure = $date_heure;
     $this->equipe_adverse = $equipe_adverse;
     $this->lieu = $lieu;
-    $this->resultat = $resultat;
   }
 
   public function getId()
