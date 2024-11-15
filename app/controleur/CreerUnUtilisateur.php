@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../modele/User.php';
 require_once __DIR__ . '/../modele/UserDAO.php';
 require_once __DIR__ . '/../lib/cookies.php';
-require_once __DIR__ . '/../lib/twt.php';
+require_once __DIR__ . '/../lib/jwt.php';
 require_once __DIR__ . '/../lib/error.php';
 require_once __DIR__ . '/UtilisateurExiste.php';
 
@@ -22,8 +22,8 @@ class CreerUnUtilisateur
   public function execute()
   {
     $user = new User($this->username, $this->password_hash);
-    $insertedRow = $this->DAO->insert($user);
-    $user->setId($insertedRow['id']);
+    $insertedRowId = $this->DAO->insert($user);
+    $user->setId($insertedRowId);
     return $user;
   }
 }
@@ -47,12 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $createdUser->execute();
       $payload = [
         'id' => $createdUser,
-        'username  ' => $username,
+        'username' => $username,
         'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
       ];
       $jwt = JWT::generateJWT($payload);
       Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
-      header('Location: dashboard', true, 303);
+      header('Location: /vue/dashboard', true, 303);
       exit();
     }
   }
