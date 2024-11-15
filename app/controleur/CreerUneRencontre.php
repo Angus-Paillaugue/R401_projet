@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../modele/Rencontre.php';
 require_once __DIR__ . '/../modele/RencontreDAO.php';
+require_once __DIR__ . '/../lib/error.php';
 
 class CreerUneRencontre
 {
@@ -27,5 +28,31 @@ class CreerUneRencontre
     $idRencontre = $this->DAO->insert($rencontre);
     return $idRencontre;
   }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if (
+    empty($_POST['date_heure']) ||
+    empty($_POST['equipe_adverse']) ||
+    empty($_POST['lieu'])
+  ) {
+    ErrorHandling::setError('Veuillez remplir tous les champs');
+    header('Location: /vue/dashboard/add-rencontre.php', true, 303);
+    exit();
+  }
+
+  $date_heure = $_POST['date_heure'];
+  $equipe_adverse = $_POST['equipe_adverse'];
+  $lieu = $_POST['lieu'];
+
+  $creerUneRencontre = new CreerUneRencontre(
+    $date_heure,
+    $equipe_adverse,
+    $lieu
+  );
+  $idRencontre = $creerUneRencontre->execute();
+
+  header('Location: /vue/dashboard/rencontre.php?id=' . $idRencontre);
+  exit();
 }
 ?>

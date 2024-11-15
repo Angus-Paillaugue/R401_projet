@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../modele/Commentaire.php';
 require_once __DIR__ . '/../modele/CommentaireDAO.php';
+require_once __DIR__ . '/RecupererUnJoueur.php';
 
 class CreerUnCommentaire
 {
@@ -18,9 +19,27 @@ class CreerUnCommentaire
   public function execute()
   {
     $commentaire = new Commentaire($this->id_joueur, $this->contenu);
-    $insertedRow = $this->DAO->insert($commentaire);
-    $commentaire->setId($insertedRow['id']);
+    $insertedRowId = $this->DAO->insert($commentaire);
+    $commentaire->setId($insertedRowId);
     return $commentaire;
   }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  try {
+    $joueur = new RecupererUnJoueur(intval($_POST['id']));
+    $joueur = $joueur->execute();
+  } catch (Exception $e) {
+    ErrorHandling::setFatalError($e->getMessage());
+  }
+  $commentaire = $_POST['commentaire'];
+  $ajoutCommentaire = new CreerUnCommentaire($joueur->getId(), $commentaire);
+  $ajoutCommentaire->execute();
+  header(
+    'Location: /vue/dashboard/joueur.php?id=' . $joueur->getId(),
+    true,
+    303
+  );
+  exit();
 }
 ?>

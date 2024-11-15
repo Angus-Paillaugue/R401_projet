@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../modele/User.php';
 require_once __DIR__ . '/../modele/UserDAO.php';
+require_once __DIR__ . '/../lib/cookies.php';
+require_once __DIR__ . '/../lib/twt.php';
+require_once __DIR__ . '/../lib/error.php';
+require_once __DIR__ . '/UtilisateurExiste.php';
 
 class CreerUnUtilisateur
 {
@@ -22,5 +26,37 @@ class CreerUnUtilisateur
     $user->setId($insertedRow['id']);
     return $user;
   }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+  if (empty($username) || empty($password)) {
+    ErrorHandling::setError('Veuillez remplir tous les champs');
+    header('Location: /vue/sign-up.php');
+    exit();
+  } else {
+    $username = htmlspecialchars($username);
+    $password = htmlspecialchars($password);
+    $userExists = new UtilisateurExiste($username);
+    if ($userExists->execute()) {
+      ErrorHandling::setError('Ce nom d\'utilisateur existe déjà');
+    } else {
+      $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+      $createdUser = new CreerUnUtilisateur($username, $hashed_password);
+      $createdUser->execute();
+      $payload = [
+        'id' => $createdUser,
+        'username  ' => $username,
+        'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
+      ];
+      $jwt = JWT::generateJWT($payload);
+      Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
+      header('Location: dashboard', true, 303);
+      exit();
+    }
+  }
+  header('Location: /vue/sign-up.php', true, 303);
+  exit();
 }
 ?>

@@ -7,11 +7,14 @@ $jwt = Cookies::getCookie('token');
 if ($jwt) {
   $payload = JWT::validateJWT($jwt);
   if ($payload) {
-    header('Location: /dashboard', true, 303);
+    header('Location: /vue/dashboard', true, 303);
+    exit();
   } else {
-    header('Location: log-in.php', true, 303);
+    header('Location: /vue/log-in.php', true, 303);
+    exit();
   }
 } else {
-  header('Location: log-in.php', true, 303);
+  header('Location: /vue/log-in.php', true, 303);
+  exit();
 }
 ?>

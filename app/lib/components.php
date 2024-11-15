@@ -46,17 +46,18 @@ class Components
     $tw = TailwindMerge::instance();
     $label = Components::merge($params, 'label');
     $variant = Components::merge($params, 'variant', 'primary');
-    $type = Components::merge($params, 'type', 'submit');
     $class = Components::merge($params, 'class');
     $disabled = Components::merge($params, 'disabled', '', 'disabled');
     $href = Components::merge($params, 'href');
-    $id = Components::merge($params, 'id');
     $icon = Components::merge($params, 'icon');
     $variantClasses = [
-      'primary' => 'bg-primary-700 text-neutral-200',
-      'secondary' => 'bg-neutral-700 text-neutral-400',
-      'ghost' => 'border text-neutral-600',
-      'danger' => 'bg-red-600 text-white',
+      'primary' =>
+        'dark:bg-primary-dark dark:text-neutral-200 bg-primary-light text-neutral-100',
+      'secondary' =>
+        'dark:bg-neutral-700 dark:text-neutral-400 bg-neutral-300 text-neutral-600',
+      'ghost' => 'border dark:text-neutral-600 text-neutral-400',
+      'danger' =>
+        'dark:bg-red-600 dark:text-neutral-100 bg-red-400 text-neutral-900',
       'square' => 'size-10',
     ];
     $variantClasses = implode(
@@ -67,14 +68,28 @@ class Components
       'cursor-pointer transition-all duration-200 ease-in-out px-4 py-2 font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center flex flex-row gap-2 text-center active:scale-95';
     $classes = $tw->merge($baseClasses, $variantClasses, $class);
     $iconHTML = $icon != '' ? Components::Icon(['icon' => $icon]) : '';
+    $restParams = ['id'];
+    $restParams = array_reduce(
+      $restParams,
+      function ($acc, $param) use ($params) {
+        $value = Components::merge($params, $param);
+        if ($value) {
+          if ($value === true) {
+            $acc .= "$param ";
+          } elseif ($value === false) {
+            $acc .= '';
+          } else {
+            $acc .= "$param='$value' ";
+          }
+        }
+        return $acc;
+      },
+      ''
+    );
     if ($href) {
-      echo "<a href='$href' " .
-        ($id && 'id=' . $id) .
-        " class='$classes' $disabled type='$type'>$iconHTML $label</a>";
+      echo "<a href='$href' class='$classes' $disabled $restParams>$iconHTML $label</a>";
     } else {
-      echo "<button type='submit' " .
-        ($id && 'id=' . $id) .
-        " class='$classes' $disabled type='$type'>$iconHTML $label</button>";
+      echo "<button type='submit' class='$classes' $disabled $restParams>$iconHTML $label</button>";
     }
   }
 
@@ -99,12 +114,12 @@ class Components
     if (Components::merge($params, 'disabled')) {
       $class = $tw->merge(
         $class,
-        'cursor-not-allowed text-neutral-400 hover:text-neutral-400 no-underline'
+        'cursor-not-allowed text-neutral-700 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-400 no-underline'
       );
       $href = '#';
     }
     $classes = $tw->merge(
-      'cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-100 hover:text-neutral-400 underline transition-colors active:scale-95',
+      'cursor-pointer font-medium items-center justify-center inline-flex flex-row gap-2 text-neutral-700 hover:text-neutral-900 dark:text-neutral-100 dark:hover:text-neutral-400 underline transition-colors active:scale-95',
       $class
     );
     echo "<a href='$href' " .
@@ -191,13 +206,18 @@ class Components
    */
   public static function Alert($params = [])
   {
+    $tw = TailwindMerge::instance();
     $text = Components::merge($params, 'text');
     $variant = Components::merge($params, 'variant', 'danger');
     $alertClasses = [
-      'danger' => 'bg-neutral-800 text-red-400',
-      'warning' => 'bg-neutral-800 text-yellow-400',
-      'success' => 'bg-neutral-800 text-green-400',
-      'info' => 'bg-neutral-800 text-blue-400',
+      'danger' =>
+        'bg-neutral-100 text-red-600 dark:bg-neutral-800 dark:text-red-400',
+      'warning' =>
+        'bg-neutral-100 text-yellow-600 dark:bg-neutral-800 dark:text-yellow-400',
+      'success' =>
+        'bg-neutral-100 text-green-600 dark:bg-neutral-800 dark:text-green-400',
+      'info' =>
+        'bg-neutral-100 text-blue-600 dark:bg-neutral-800 dark:text-blue-400',
     ];
     $icons = [
       'danger' =>
@@ -228,7 +248,11 @@ class Components
     }
 
     $error = str_replace('{text}', $text, $alertTemplate);
-    $error = str_replace('{classes}', $alertClasses[$variant], $error);
+    $error = str_replace(
+      '{classes}',
+      $tw->merge($alertClasses[$variant], Components::merge($params, 'class')),
+      $error
+    );
     $error = str_replace('{icon}', $icons[$variant], $error);
     $error = str_replace('{title}', $alertTtiles[$variant], $error);
 
@@ -271,6 +295,10 @@ class Components
         '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
       'poste' =>
         '<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/>',
+      'sun' =>
+        '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+      'trash' =>
+        '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
     ];
     if (!array_key_exists($icon, $iconPaths)) {
       throw new Exception('Invalid icon name');

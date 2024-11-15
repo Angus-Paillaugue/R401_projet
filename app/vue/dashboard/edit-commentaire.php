@@ -27,25 +27,14 @@ try {
 
 $joueur = new RecupererUnJoueur($commentaire->getIdJoueur());
 $joueur = $joueur->execute();
-
-// Si le formulaire est soumis
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $commentaire = new Commentaire($joueur->getId(), $_POST['commentaire']);
-  $commentaire->setId($_GET['id']);
-  (new ModifierUnCommentaire($commentaire))->execute();
-  header('Location: joueur.php?id=' . $joueur->getId(), true, 303);
-}
 ?>
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
-  '?' .
-  http_build_query(
-    $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900">
+<form method="POST" action="/controleur/ModifierUnCommentaire.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <h1>
     Modifier un commentaire
   </h1>
-  <textarea name="commentaire" id="commentaire" class="w-full h-32 border border-neutral-900 rounded-lg p-2" placeholder="Entrez votre commentaire ici"><?php echo $commentaire->getContenu(); ?></textarea>
+  <input type="hidden" name="id" value="<?php echo $commentaire->getId(); ?>" />
+  <textarea name="commentaire" id="commentaire" class="w-full h-32 border border-neutral-300/50 dark:border-neutral-900 rounded-lg p-2" placeholder="Entrez votre commentaire ici"><?php echo $commentaire->getContenu(); ?></textarea>
 
   <?php Components::Button([
     'label' => 'Enregistrer',

@@ -23,43 +23,12 @@ try {
 } catch (Exception $e) {
   ErrorHandling::setFatalError($e->getMessage());
 }
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $rencontre = new RecupererUneRencontre($_GET['id']);
-  $rencontre = $rencontre->execute();
-  $rencontre->setEquipeAdverse($_POST['nom']);
-  $rencontre->setDateHeure($_POST['date_heure']);
-  $rencontre->setLieu($_POST['lieu']);
-  $rencontre->setResultat($_POST['resultat']);
-  $rencontre->setFeuilleMatch([]);
-  for ($i = 0; $i < 16; $i++) {
-    $feuille = new FeuilleMatch(
-      $rencontre->getId(),
-      intval($_POST['joueur_' . $i]),
-      $_POST['role_debut_' . $i],
-      $_POST['role_fin_' . $i],
-      $_POST['poste_' . $i],
-      intval($_POST['evaluation_' . $i])
-    );
-    if ($_POST['id_feuille_' . $i]) {
-      $feuille->setId(intval($_POST['id_feuille_' . $i]));
-    }
-    $feuilles = $rencontre->getFeuilleMatch();
-    $feuilles[] = $feuille;
-    $rencontre->setFeuilleMatch($feuilles);
-  }
-  $update = new ModifierUneRencontre($rencontre);
-  $update->execute();
-  header('Location: /dashboard/rencontre.php?id=' . $rencontre->getId());
-}
 ?>
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
-  '?' .
-  http_build_query(
-    $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-900">
+<form method="POST" action="/controleur/ModifierUneRencontre.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
   <h2>Modifier une rencontre</h2>
+
+  <input type="hidden" name="id" value="<?php echo $rencontre->getId(); ?>" />
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <?php
@@ -98,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $feuille = $rencontre->getFeuilleMatch()
         ? $rencontre->getFeuilleMatch()[$i]
         : null;
-      echo "<div class='p-4 rounded-lg border gap-4 border-neutral-900 grid grid-cols-2'>";
+      echo "<div class='p-4 rounded-lg border gap-4 border-neutral-300/50 dark:border-neutral-900 grid grid-cols-2'>";
 
       // Id feuille
       if ($feuille) {
@@ -137,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ]);
 
       // Rôle
-      echo "<div class='block'><p class='text-neutral-400 font-medium text-base mb-1 block'>Rôle</p>";
+      echo "<div class='block'><p class='text-neutral-600 dark:text-neutral-400 font-medium text-base mb-1 block'>Rôle</p>";
       echo "<div class='flex items-center'>";
       Components::Select([
         'id' => 'role_debut_' . $i,
@@ -149,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ]);
       echo Components::Icon([
         'icon' => 'arrowRight',
-        'class' => 'shrink-0 size-5 text-neutral-400',
+        'class' => 'shrink-0 size-5 text-neutral-600 dark:text-neutral-400',
       ]);
       Components::Select([
         'id' => 'role_fin_' . $i,
@@ -163,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       echo '</div>';
 
       // Évaluation
-      echo "<div class='block'><p class='text-neutral-400 font-medium text-base mb-1 block'>Évaluation</p>";
+      echo "<div class='block'><p class='text-neutral-600 dark:text-neutral-400 font-medium text-base mb-1 block'>Évaluation</p>";
       echo "<div class='flex items-center'>";
       Components::Select([
         'id' => 'evaluation_' . $i,
@@ -190,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       'label' => 'Annuler',
       'variant' => 'danger',
       'type' => 'button',
-      'href' => '/dashboard/rencontre.php?id=' . $rencontre->getId(),
+      'href' => '/vue/dashboard/rencontre.php?id=' . $rencontre->getId(),
     ]);
     Components::Button([
       'label' => 'Enregistrer',

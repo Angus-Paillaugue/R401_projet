@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../modele/Joueur.php';
-require_once __DIR__ . '/../modele/JoueurDAO.php';
+require_once __DIR__ . '/../modele/Rencontre.php';
+require_once __DIR__ . '/../modele/RencontreDAO.php';
 require_once __DIR__ . '/../lib/error.php';
-require_once __DIR__ . '/RecupererUnJoueur.php';
+require_once __DIR__ . '/RecupererUneRencontre.php';
 
-class SupprimerUnJoueur
+class SupprimerUneRencontre
 {
   private $DAO;
   private $joueur;
@@ -12,7 +12,7 @@ class SupprimerUnJoueur
   public function __construct($joueur)
   {
     $this->joueur = $joueur;
-    $this->DAO = new JoueurDAO();
+    $this->DAO = new RencontreDAO();
   }
 
   public function execute()
@@ -22,13 +22,13 @@ class SupprimerUnJoueur
 }
 
 if (!isset($_GET['id'])) {
-  ErrorHandling::setError('ID du joueur non fourni');
+  ErrorHandling::setError('ID de la rencontre non fourni');
   exit();
 }
 
 try {
-  $joueur = (new RecupererUnJoueur($_GET['id']))->execute();
-  (new SupprimerUnJoueur($joueur))->execute();
+  $joueur = (new RecupererUneRencontre($_GET['id']))->execute();
+  (new SupprimerUneRencontre($joueur))->execute();
 
   header('Location: /vue/dashboard/');
   exit();

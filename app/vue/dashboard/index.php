@@ -27,34 +27,31 @@ try {
 ?>
 
 
-<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-900">
+<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
 	<h1>Bienvenue <?php echo $payload['username']; ?></h1>
   <?php
-  echo "<div class='grid grid-cols-2 gap-8'><div class='flex flex-row items-start justify-start gap-4 flex-wrap'>";
+  echo "<div class='flex max-md:flex-col md:grid grid-cols-2 gap-8'><div class='flex flex-col gap-4'>";
   Components::Button([
     'label' => 'Ajouter une rencontre',
-    'variant' => 'primary',
-    'href' => '/dashboard/add-rencontre.php',
+    'href' => '/vue/dashboard/add-rencontre.php',
     'icon' => 'plus',
   ]);
   Components::Button([
     'label' => 'Ajouter un joueur',
-    'variant' => 'primary',
-    'href' => '/dashboard/add-joueur.php',
+    'href' => '/vue/dashboard/add-joueur.php',
     'icon' => 'plus',
   ]);
   Components::Button([
     'label' => 'Statistiques',
-    'variant' => 'primary',
-    'href' => '/dashboard/statistiques.php',
+    'href' => '/vue/dashboard/statistiques.php',
     'icon' => 'chart',
   ]);
   echo '</div>';
 
   // Liste des joueurs
-  echo "<div><h2>Joueurs</h2><div class='!m-0 max-h-[300px] overflow-y-auto rounded-lg'><table class='w-full table-auto text-sm'><thead class='sticky top-0 bg-neutral-900'><tr><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-400'>Nom</td><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-400'>Prénom</td></tr></thead><tbody>";
+  echo "<div><h2>Joueurs</h2><div class='!m-0 max-h-[300px] overflow-y-auto rounded-lg'><table class='w-full table-auto text-sm'><thead class='sticky top-0 bg-neutral-100 dark:bg-neutral-900'><tr><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Nom</td><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Prénom</td></tr></thead><tbody>";
   foreach ($joueurs as $joueur) {
-    echo "<tr class='even:bg-neutral-900'><td class='px-4 py-1 align-middle'><a class='hover:underline' href='/dashboard/joueur.php?id=" .
+    echo "<tr class='even:bg-neutral-100 dark:even:bg-neutral-900'><td class='px-4 py-1 align-middle'><a class='hover:underline' href='/vue/dashboard/joueur.php?id=" .
       $joueur->getId() .
       "'>" .
       $joueur->getNom() .
@@ -70,24 +67,24 @@ try {
     Components::Button([
       'label' => 'Voir tout',
       'variant' => 'primary',
-      'href' => '/dashboard/rencontres.php?next',
+      'href' => '/vue/dashboard/rencontres.php?next',
       'icon' => 'plus',
     ]);
     echo "</div><div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
     foreach ($rencontres['next'] as $rencontre) {
       echo "
-      <a href='/dashboard/rencontre.php?id=" .
+      <a href='/vue/dashboard/rencontre.php?id=" .
         $rencontre->getId() .
-        "' class='bg-neutral-900 hover:bg-neutral-900 p-4 rounded-lg border border-neutral-900'>
+        "' class='bg-neutral-100 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900 p-4 rounded-lg border border-neutral-100 dark:border-neutral-900'>
         <div class='flex flex-row justify-between items-center'>
           <h4 class='text-2xl font-semibold'>" .
         $rencontre->getEquipeAdverse() .
         "</h4>
-          <time class='text-base text-neutral-400 font-base'>" .
+          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>" .
         Formatters::formatDateTime($rencontre->getDateHeure()) .
         "</time>
         </div>
-        <p class='text-neutral-400 text-lg font-semibold'>" .
+        <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>" .
         $rencontre->getLieu() .
         "</p>
       </a>";
@@ -101,7 +98,7 @@ try {
     Components::Button([
       'label' => 'Voir tout',
       'variant' => 'primary',
-      'href' => '/dashboard/rencontres.php?previous',
+      'href' => '/vue/dashboard/rencontres.php?previous',
       'icon' => 'plus',
     ]);
     echo "</div><div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
@@ -120,19 +117,19 @@ try {
           '</div>'
         : '';
       echo "
-      <a href='/dashboard/rencontre.php?id=" .
+      <a href='/vue/dashboard/rencontre.php?id=" .
         $rencontre->getId() .
-        "' class='bg-neutral-900 transition-colors hover:bg-neutral-900 p-4 rounded-lg border border-neutral-900'>
+        "' class='bg-neutral-100 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900 p-4 rounded-lg border border-neutral-100 dark:border-neutral-900'>
         <div class='flex flex-row justify-between items-center'>
           <h4 class='text-2xl font-semibold'>" .
         $rencontre->getEquipeAdverse() .
         "</h4>
-          <time class='text-base text-neutral-400 font-base'>" .
+          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>" .
         Formatters::formatDateTime($rencontre->getDateHeure()) .
         "</time>
         </div>
         <div class='flex flex-row items-end justify-between'>
-          <p class='text-neutral-400 text-lg font-semibold'>" .
+          <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>" .
         $rencontre->getLieu() .
         "</p>
           $pill

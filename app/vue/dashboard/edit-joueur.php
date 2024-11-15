@@ -17,42 +17,6 @@ if (!isset($_GET['id'])) {
   ErrorHandling::setFatalError('ID du joueur non valide');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $nom = $_POST['nom'];
-  $prenom = $_POST['prenom'];
-  $licence = $_POST['licence'];
-  $date_de_naissance = $_POST['date_de_naissance'];
-  $taille = $_POST['taille'];
-  $poids = $_POST['poids'];
-
-  if (
-    !isset($nom) ||
-    !isset($prenom) ||
-    !isset($licence) ||
-    !isset($date_de_naissance) ||
-    !isset($taille) ||
-    !isset($poids)
-  ) {
-    ErrorHandling::setError('Veuillez remplir tous les champs');
-    exit();
-  }
-
-  $joueur = new Joueur(
-    $nom,
-    $prenom,
-    $licence,
-    $date_de_naissance,
-    $taille,
-    $poids
-  );
-  $joueur->setId($_GET['id']);
-
-  $modifierUnJoueur = new ModifierUnJoueur($joueur);
-  $modifierUnJoueur->execute();
-
-  header('Location: joueur.php?id=' . $_GET['id'], true, 303);
-}
-
 try {
   $joueur = (new RecupererUnJoueur($_GET['id']))->execute();
 } catch (Exception $e) {
@@ -60,14 +24,11 @@ try {
 }
 ?>
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
-  '?' .
-  http_build_query(
-    $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900">
+<form method="POST" action="/controleur/ModifierUnJoueur.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <h1>
     Modifier un joueur
   </h1>
+  <input type="hidden" name="id" value="<?php echo $joueur->getId(); ?>" />
   <?php
   echo "<div class='grid grid-cols-1 md:grid-cols-2 gap-4'>";
   Components::Input([

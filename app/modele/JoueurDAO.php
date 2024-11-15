@@ -143,6 +143,11 @@ class JoueurDAO
       'SELECT poste, COUNT(poste) as count FROM feuille_match WHERE id_joueur = ? GROUP BY poste ORDER BY count DESC LIMIT 1;',
       $id
     );
+    if (count($data) == 0) {
+      return [
+        'poste' => null,
+      ];
+    }
     return [
       'poste' => $data[0]['poste'],
     ];

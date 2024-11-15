@@ -33,9 +33,6 @@ class Cookies
     setcookie($name, $value, [
       'expires' => $expires,
       'path' => '/',
-      'samesite' => 'Strict',
-      'httponly' => true,
-      'secure' => true,
     ]);
   }
 
@@ -50,9 +47,6 @@ class Cookies
     setcookie($name, '', [
       'expires' => time() - 3600,
       'path' => '/',
-      'samesite' => 'Strict',
-      'httponly' => true,
-      'secure' => true,
     ]);
   }
 }

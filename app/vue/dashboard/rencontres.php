@@ -27,40 +27,40 @@ function displayRencontres($r)
   echo "<div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
   foreach ($r as $rencontre) {
     echo "
-    <a href='/dashboard/rencontre.php?id=" .
+    <a href='/vue/dashboard/rencontre.php?id=" .
       $rencontre->getId() .
-      "' class='bg-neutral-900 transition-colors hover:bg-neutral-900 p-4 rounded-lg border border-neutral-900'>
+      "' class='bg-neutral-900 transition-colors hover:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
       <div class='flex flex-row justify-between items-center'>
         <h4 class='text-2xl font-semibold'>" .
       $rencontre->getEquipeAdverse() .
       "</h4>
-        <time class='text-base text-neutral-400 font-base'>" .
+        <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>" .
       Formatters::formatDateTime($rencontre->getDateHeure()) .
       "</time>
       </div>
-      <p class='text-neutral-400 text-lg font-semibold'>" .
+      <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>" .
       $rencontre->getLieu() .
       "</p>
     </a>";
   }
   echo '</div>';
 }
-echo "<div class='max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900'>";
+echo "<div class='max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900'>";
 echo "<div class='flex flex-row items-center justify-between'>";
 echo '<h2>Toutes les rencontres</h2>';
 echo "<div class='flex flex-row gap-2 items-center'>";
 Components::Link([
-  'href' => '/dashboard/rencontres.php?previous',
+  'href' => '/vue/dashboard/rencontres.php?previous',
   'label' => 'Précédentes',
   'disabled' => $previous,
 ]);
 Components::Link([
-  'href' => '/dashboard/rencontres.php',
+  'href' => '/vue/dashboard/rencontres.php',
   'label' => 'Toutes',
   'disabled' => !$next && !$previous,
 ]);
 Components::Link([
-  'href' => '/dashboard/rencontres.php?next',
+  'href' => '/vue/dashboard/rencontres.php?next',
   'label' => 'Prochaines',
   'disabled' => $next,
 ]);

@@ -26,23 +26,33 @@ try {
 }
 ?>
 
-<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-900">
+<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <div class="flex flex-row items-center justify-between">
     <h2>Rencontre</h2>
-    <?php if ($isInPast) {
-      Components::Button([
-        'label' => 'Modifier',
-        'href' => '/dashboard/edit-rencontre.php?id=' . $rencontre->getId(),
-      ]);
-    } ?>
+    <div class="flex flex-row gap-4">
+
+    <?php
+    Components::Button([
+      'label' => 'Modifier',
+      'href' => '/vue/dashboard/edit-rencontre.php?id=' . $rencontre->getId(),
+    ]);
+    Components::Button([
+      'icon' => 'trash',
+      'variant' => 'danger square',
+      'class' => 'p-3',
+      'href' =>
+        '/controleur/SupprimerUneRencontre.php?id=' . $rencontre->getId(),
+    ]);
+    ?>
+    </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <div class="bg-neutral-900 p-4 rounded-xl border border-neutral-900">
+    <div class="bg-neutral-100 dark:bg-neutral-900 p-4 rounded-xl border border-neutral-300/50 dark:border-neutral-900">
       <h4 class="text-2xl font-semibold"><?php echo $rencontre->getEquipeAdverse(); ?></h4>
-      <time class="text-base text-neutral-400 font-base"><?php echo Formatters::formatDateTime(
+      <time class="text-base text-neutral-600 dark:text-neutral-400 font-base"><?php echo Formatters::formatDateTime(
         $rencontre->getDateHeure()
       ); ?></time>
-      <div class="text-neutral-400 text-lg font-semibold flex flex-row items-center gap-2">
+      <div class="text-neutral-600 dark:text-neutral-400 text-lg font-semibold flex flex-row items-center gap-2">
         <?php
         echo Components::Icon([
           'icon' => $rencontre->getLieu(),
@@ -55,28 +65,28 @@ try {
 
             <?php if ($isInPast) {
               if ($rencontre->getFeuilleMatch()) {
-                echo '<div class="bg-neutral-900 p-4 lg:col-span-2 rounded-xl border border-neutral-900">
+                echo '<div class="bg-neutral-100 dark:bg-neutral-900 p-4 lg:col-span-2 rounded-xl border border-neutral-300/50 dark:border-neutral-900">
         <h4 class="text-2xl font-semibold">Joueurs</h4>
-        <div class="border border-neutral-900 block rounded-xl max-h-[500px] overflow-auto">
+        <div class="border border-neutral-300/50 dark:border-neutral-900 block rounded-xl max-h-[500px] overflow-auto">
           <table class="w-full table-auto text-sm">
-            <thead class="sticky top-0 bg-neutral-800">
+            <thead class="sticky top-0 bg-neutral-200 dark:bg-neutral-800">
               <tr>
-                <th scope="col" class="sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-400">
+                <th scope="col" class="sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400">
                   Joueur
                 </th>
-                <th scope="col" class="sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-400">
+                <th scope="col" class="sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400">
                   Role
                 </th>
               </tr>
             </thead>
-            <tbody class="[&amp;_tr:last-child]:border-0">';
+            <tbody>';
                 // Si la date de la rencontre est dans le futur, on affiche les joueurs de l'équipe
                 foreach ($rencontre->getFeuilleMatch() as $feuille_match) {
                   $joueur = $feuille_match->getJoueur();
                   echo "
-            <tr class='transition-colors even:bg-neutral-800'>
+            <tr class='transition-colors even:bg-neutral-300 dark:even:bg-neutral-800'>
               <td class='w-1/12 px-4 align-middle'>
-                <a href='/dashboard/joueur.php?id=" .
+                <a href='/vue/dashboard/joueur.php?id=" .
                     $joueur->getId() .
                     "' class='text-base font-medium'>" .
                     $joueur->getNom() .
@@ -101,13 +111,14 @@ try {
                 echo '</tbody></table></div>';
               } else {
                 // Il n'y a pas de feuille de match
-                echo '<div class="bg-neutral-900 p-4 lg:col-span-2 space-y-2 rounded-xl border border-neutral-900">
+                echo '<div class="bg-neutral-100 dark:bg-neutral-900 p-4 lg:col-span-2 space-y-2 rounded-xl border border-neutral-300/50 dark:border-neutral-900">
                   <h4 class="text-2xl font-semibold">Feuille de match</h4>
-                  <p class="text-lg text-neutral-400">Aucune feuille de match n\'a été renseignée pour cette rencontre.</p>';
+                  <p class="text-lg text-neutral-600 dark:text-neutral-400">Aucune feuille de match n\'a été renseignée pour cette rencontre.</p>';
                 Components::Button([
                   'label' => 'Ajouter une feuille de match',
                   'href' =>
-                    '/dashboard/edit-rencontre.php?id=' . $rencontre->getId(),
+                    '/vue/dashboard/edit-rencontre.php?id=' .
+                    $rencontre->getId(),
                 ]);
                 echo '</div>';
               }

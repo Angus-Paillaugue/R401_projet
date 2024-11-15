@@ -11,33 +11,9 @@ error_reporting(E_ALL);
 ob_start();
 
 $title = 'Ajouter une rencontre';
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $date_heure = $_POST['date_heure'];
-  $equipe_adverse = $_POST['equipe_adverse'];
-  $lieu = $_POST['lieu'];
-
-  if (empty($date_heure) || empty($equipe_adverse) || empty($lieu)) {
-    ErrorHandling::setError('Veuillez remplir tous les champs');
-    header('Location: ' . $_SERVER['PHP_SELF']);
-  }
-
-  $creerUneRencontre = new CreerUneRencontre(
-    $date_heure,
-    $equipe_adverse,
-    $lieu
-  );
-  $idRencontre = $creerUneRencontre->execute();
-
-  header('Location: /dashboard/rencontre.php?id=' . $idRencontre);
-}
 ?>
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) .
-  '?' .
-  http_build_query(
-    $_GET
-  ); ?>" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-900">
+<form method="POST" action="/controleur/CreerUneRencontre.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
   <h2>Ajouter une rencontre</h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -59,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if (ErrorHandling::hasError()) {
         Components::Alert([
           'text' => ErrorHandling::getError(),
-          'class' => 'md:col-span-2',
+          'class' => 'md:col-span-2 m-0',
         ]);
       }
     } ?>
@@ -71,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       'label' => 'Annuler',
       'variant' => 'danger',
       'type' => 'button',
-      'href' => '/dashboard',
+      'href' => '/vue/dashboard',
     ]);
     Components::Button([
       'label' => 'Ajouter',

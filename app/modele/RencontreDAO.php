@@ -185,12 +185,25 @@ class RencontreDAO
 
       -- Win percentage when the player was 'Titulaire' at either the start or the end of the match
       (100.0 * COUNT(CASE WHEN (feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire') AND rencontre.resultat = 'Victoire' THEN 1 END) /
-      NULLIF(COUNT(CASE WHEN feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire' THEN 1 END), 0)) AS pourcentage_victoire_titulaire
+      NULLIF(COUNT(CASE WHEN feuille_match.role_debut = 'Titulaire' OR feuille_match.role_fin = 'Titulaire' THEN 1 END), 0)) AS pourcentage_victoire_titulaire,
+      -- Number of consecutive matches the player has participated in
+      (SELECT MAX(consecutive_matches) FROM (
+        SELECT id_joueur, COUNT(*) AS consecutive_matches
+        FROM (
+          SELECT id_joueur, id_rencontre,
+          ROW_NUMBER() OVER (PARTITION BY id_joueur ORDER BY date_heure) -
+          ROW_NUMBER() OVER (PARTITION BY id_joueur, CASE WHEN role_debut IS NOT NULL OR role_fin IS NOT NULL THEN 1 ELSE 0 END ORDER BY date_heure) AS grp
+          FROM feuille_match
+          JOIN rencontre ON feuille_match.id_rencontre = rencontre.id
+        ) AS subquery
+        WHERE role_debut IS NOT NULL OR role_fin IS NOT NULL
+        GROUP BY id_joueur, grp
+      ) AS consecutive_matches_subquery WHERE id_joueur = joueur.id) AS nbMatchConsecutifs
     FROM joueur
     LEFT JOIN feuille_match ON joueur.id = feuille_match.id_joueur
     LEFT JOIN rencontre ON feuille_match.id_rencontre = rencontre.id
 
-    GROUP BY joueur.id;";
+    GROUP BY joueur.id, feuille_match.role_debut, feuille_match.role_fin;";
 
     $playersStats = $this->conn->run_query($playersStatsSQL);
     return [
