@@ -46,6 +46,11 @@ try {
     'href' => '/vue/dashboard/statistiques.php',
     'icon' => 'chart',
   ]);
+  Components::Button([
+    'label' => 'Créer une un compte',
+    'href' => '/vue/dashboard/sign-up.php',
+    'icon' => 'plus',
+  ]);
   echo '</div>';
 
   // Liste des joueurs

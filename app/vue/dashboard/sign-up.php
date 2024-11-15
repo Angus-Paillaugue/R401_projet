@@ -3,24 +3,12 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once __DIR__ . '/../lib/jwt.php';
-require_once __DIR__ . '/../lib/cookies.php';
-require_once __DIR__ . '/../lib/components.php';
-require_once __DIR__ . '/../lib/error.php';
+require_once __DIR__ . '/../../lib/jwt.php';
+require_once __DIR__ . '/../../lib/cookies.php';
+require_once __DIR__ . '/../../lib/components.php';
+require_once __DIR__ . '/../../lib/error.php';
 
 $title = 'Sign up';
-$loc = htmlspecialchars($_SERVER['PHP_SELF']) . '?' . http_build_query($_GET);
-
-$jwt = Cookies::getCookie('token');
-$payload = null;
-
-if ($jwt) {
-  $payload = JWT::validateJWT($jwt);
-  if ($payload) {
-    header('Location: /vue/dashboard', true, 303);
-    exit();
-  }
-}
 
 ob_start();
 ?>
@@ -45,13 +33,15 @@ ob_start();
         'variant' => 'danger',
       ]);
     }
+    if(ErrorHandling::hasSuccess()) {
+      Components::Alert([
+        'text' => ErrorHandling::getSuccess(),
+        'variant' => 'success',
+      ]);
+    }
     Components::Button([
       'label' => 'Créer',
       'variant' => 'primary',
-    ]);
-    Components::Link([
-      'label' => 'Se connecter',
-      'href' => '/vue/log-in.php',
     ]);
     ?>
   </form>
@@ -59,7 +49,7 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-require_once './layout.php';
+require_once __DIR__ . '/../layout.php';
 
 
 ?>

@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $password = $_POST['password'];
   if (empty($username) || empty($password)) {
     ErrorHandling::setError('Veuillez remplir tous les champs');
-    header('Location: /vue/sign-up.php');
+    header('Location: /vue/dashboard/sign-up.php', true, 303);
     exit();
   } else {
     $username = htmlspecialchars($username);
@@ -45,18 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $hashed_password = password_hash($password, PASSWORD_DEFAULT);
       $createdUser = new CreerUnUtilisateur($username, $hashed_password);
       $createdUser->execute();
-      $payload = [
-        'id' => $createdUser,
-        'username' => $username,
-        'exp' => time() + 60 * 60 * 24, // Token expiration set to 1 day
-      ];
-      $jwt = JWT::generateJWT($payload);
-      Cookies::setCookie('token', $jwt, time() + 60 * 60 * 24);
-      header('Location: /vue/dashboard', true, 303);
+      ErrorHandling::setSuccess('Compte créé avec succès');
+      header('Location: /vue/dashboard/sign-up.php', true, 303);
       exit();
     }
   }
-  header('Location: /vue/sign-up.php', true, 303);
+  header('Location: /vue/dashboard/sign-up.php', true, 303);
   exit();
 }
 ?>

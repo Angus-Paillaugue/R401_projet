@@ -54,10 +54,6 @@ ob_start();
     'label' => 'Se connecter',
     'variant' => 'primary',
   ]);
-  Components::Link([
-    'label' => 'Créer un compte',
-    'href' => '/vue/sign-up.php',
-  ]);
   ?>
 	</form>
 </div>

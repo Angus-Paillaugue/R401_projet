@@ -23,6 +23,26 @@ class ErrorHandling
     $_SESSION['error'] = $message;
   }
 
+  public static function setSuccess($message)
+  {
+    $_SESSION['success'] = $message;
+  }
+
+  public static function getSuccess()
+  {
+    if (isset($_SESSION['success'])) {
+      $success = $_SESSION['success'];
+      unset($_SESSION['success']); // Clear error after retrieving
+      return $success;
+    }
+    return null;
+  }
+
+  public static function hasSuccess()
+  {
+    return isset($_SESSION['success']);
+  }
+
   /**
    * Retrieves and clears the error message from the session.
    *
