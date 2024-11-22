@@ -33,7 +33,7 @@ ob_start();
         'variant' => 'danger',
       ]);
     }
-    if(ErrorHandling::hasSuccess()) {
+    if (ErrorHandling::hasSuccess()) {
       Components::Alert([
         'text' => ErrorHandling::getSuccess(),
         'variant' => 'success',

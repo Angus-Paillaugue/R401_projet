@@ -41,11 +41,24 @@ function redirect()
   <?php // Is logged in?
 
 if ($payload) {
-    echo "<div class='p-2'><nav class='flex flex-row gap-4 items-center px-8 py-4 max-w-screen-xl mx-auto rounded-xl bg-neutral-100 dark:bg-neutral-900 w-full border border-neutral-300/50 dark:border-0'>";
+    echo "<div class='p-2'><nav class='flex flex-row gap-4 items-center px-8 py-4 max-w-screen-xl mx-auto rounded-xl bg-neutral-100 dark:bg-neutral-900 w-full border border-neutral-300/50 dark:border-neutral-900'><div class='flex flex-row gap-4 items-center'>";
     Components::Link([
       'label' => 'Dashboard',
       'href' => '/vue/dashboard',
     ]);
+    Components::Link([
+      'label' => 'Joueurs',
+      'href' => '/vue/dashboard/joueurs.php',
+    ]);
+    Components::Link([
+      'label' => 'Matches',
+      'href' => '/vue/dashboard/rencontres.php',
+    ]);
+    Components::Link([
+      'label' => 'Statistiques',
+      'href' => '/vue/dashboard/statistiques.php',
+    ]);
+    echo '</div>';
     Components::Link([
       'label' => 'Se déconnecter',
       'href' => '/vue/log-out.php',
@@ -69,7 +82,7 @@ if ($payload) {
   </main>
 
   <div class="p-2">
-    <footer class="max-w-screen-xl w-full mx-auto px-4 py-2 rounded-xl bg-neutral-100 border border-neutral-300/50 dark:border-0 dark:bg-neutral-900">
+    <footer class="max-w-screen-xl w-full mx-auto px-4 py-2 rounded-xl bg-neutral-100 border border-neutral-300/50 dark:border-neutral-900 dark:bg-neutral-900">
       <p class="font-bold text-base">&copy; <?php echo date('Y'); ?> TFC</p>
     </footer>
   </div>

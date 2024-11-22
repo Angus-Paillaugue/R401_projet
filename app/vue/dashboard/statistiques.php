@@ -26,7 +26,7 @@ try {
 <div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
   <h1>Statistiques</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="bg-neutral-100 dark:bg-neutral-900 transition-colors flex flex-row justify-between p-4 rounded-lg border border-neutral-300/50 dark:border-0">
+    <div class="bg-neutral-100 dark:bg-neutral-900 transition-colors flex flex-row justify-between p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900">
       <div class="flex flex-col">
         <h4>Globales</h4>
         <p class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Taux de victoire: <span class='text-neutral-900 dark:text-neutral-100'><?php echo ($clubStats[

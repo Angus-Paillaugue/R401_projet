@@ -29,7 +29,7 @@ function displayRencontres($r)
     echo "
     <a href='/vue/dashboard/rencontre.php?id=" .
       $rencontre->getId() .
-      "' class='bg-neutral-900 transition-colors hover:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
+      "' class='bg-neutral-100 dark:bg-neutral-900 border border-neutral-300/50 dark:border-neutral-900 p-4 rounded-lg'>
       <div class='flex flex-row justify-between items-center'>
         <h4 class='text-2xl font-semibold'>" .
       $rencontre->getEquipeAdverse() .

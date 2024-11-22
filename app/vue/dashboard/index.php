@@ -80,7 +80,7 @@ try {
       echo "
       <a href='/vue/dashboard/rencontre.php?id=" .
         $rencontre->getId() .
-        "' class='bg-neutral-100 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900 p-4 rounded-lg border border-neutral-100 dark:border-neutral-900'>
+        "' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
         <div class='flex flex-row justify-between items-center'>
           <h4 class='text-2xl font-semibold'>" .
         $rencontre->getEquipeAdverse() .
@@ -108,12 +108,14 @@ try {
     ]);
     echo "</div><div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
     foreach ($rencontres['previous'] as $rencontre) {
+      // Couleur du badge en fonction du résultat
       $pillBg =
         $rencontre->getResultat() === 'Nul'
-          ? 'bg-neutral-400'
+          ? 'bg-neutral-600'
           : ($rencontre->getResultat() == 'Victoire'
             ? 'bg-green-600'
             : 'bg-red-600');
+      // Affichage du badge si le résultat est défini
       $pill = $rencontre->getResultat()
         ? "<div class='px-2 py-1 text-base rounded-full text-neutral-100 font-semibold " .
           $pillBg .
@@ -124,7 +126,7 @@ try {
       echo "
       <a href='/vue/dashboard/rencontre.php?id=" .
         $rencontre->getId() .
-        "' class='bg-neutral-100 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-900 p-4 rounded-lg border border-neutral-100 dark:border-neutral-900'>
+        "' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
         <div class='flex flex-row justify-between items-center'>
           <h4 class='text-2xl font-semibold'>" .
         $rencontre->getEquipeAdverse() .
