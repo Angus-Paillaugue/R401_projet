@@ -27,7 +27,7 @@ ob_start();
 ?>
 
 <div class="max-w-xl mx-auto w-full p-4">
-	<form action="/controleur/SeConnecter.php" method="POST" class="p-4 space-y-4 flex flex-col rounded-xl w-full bg-neutral-100 dark:bg-neutral-800">
+	<form action="/controleur/SeConnecter.php" method="POST" class="p-4 space-y-4 flex flex-col rounded-xl w-full bg-neutral-100 dark:bg-neutral-900 border border-neutral-300/50 dark:border-neutral-900">
 		<h2 class="m-0">Se connecter</h2>
 		<?php
   // Form building

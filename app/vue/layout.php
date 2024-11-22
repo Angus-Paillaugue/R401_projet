@@ -51,7 +51,7 @@ if ($payload) {
       'href' => '/vue/dashboard/joueurs.php',
     ]);
     Components::Link([
-      'label' => 'Matches',
+      'label' => 'Matchs',
       'href' => '/vue/dashboard/rencontres.php',
     ]);
     Components::Link([

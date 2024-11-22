@@ -57,7 +57,7 @@ class Components
         'dark:bg-neutral-700 dark:text-neutral-400 bg-neutral-300 text-neutral-600',
       'ghost' => 'border dark:text-neutral-600 text-neutral-400',
       'danger' =>
-        'dark:bg-red-600 dark:text-neutral-100 bg-red-400 text-neutral-900',
+        'dark:bg-red-600 dark:text-neutral-100 bg-red-600 text-neutral-100',
       'square' => 'size-10',
     ];
     $variantClasses = implode(

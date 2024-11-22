@@ -42,15 +42,15 @@ try {
         </div>
       </div>
       <div class="flex flex-col items-end justify-between">
-        <button class="px-3 py-1 rounded bg-green-400 dark:bg-green-600 font-mono group flex flex-row text-start">
+        <button class="px-3 py-1 rounded text-neutral-100 dark:text-neutral-900 bg-green-600 dark:bg-green-600 font-mono group flex flex-row text-start">
           <span class="w-0 overflow-hidden group-hover:w-24 group-focus:w-24 transition-all block">Victoire</span>
           <span><?php echo $clubStats['nbMatchGagnes']; ?></span>
         </button>
-        <button class="px-3 py-1 rounded bg-red-400 dark:bg-red-600 font-mono group flex flex-row text-start">
+        <button class="px-3 py-1 rounded text-neutral-100 dark:text-neutral-900 bg-red-600 dark:bg-red-600 font-mono group flex flex-row text-start">
           <span class="w-0 overflow-hidden group-hover:w-24 group-focus:w-24 transition-all block">Défaites</span>
           <span><?php echo $clubStats['nbMatchPerdus']; ?></span>
         </button>
-        <button class="px-3 py-1 rounded bg-gray-400 dark:bg-gray-600 font-mono group flex flex-row text-start">
+        <button class="px-3 py-1 rounded text-neutral-100 dark:text-neutral-900 bg-gray-600 dark:bg-gray-600 font-mono group flex flex-row text-start">
           <span class="w-0 overflow-hidden group-hover:w-24 group-focus:w-24 transition-all block">Nul</span>
           <span><?php echo $clubStats['nbMatchNuls']; ?></span>
         </button>
