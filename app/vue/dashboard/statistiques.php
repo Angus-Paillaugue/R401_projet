@@ -50,7 +50,7 @@ try {
           <span class="w-0 overflow-hidden group-hover:w-24 group-focus:w-24 transition-all block">Défaites</span>
           <span><?php echo $clubStats['nbMatchPerdus']; ?></span>
         </button>
-        <button class="px-3 py-1 rounded text-neutral-100 dark:text-neutral-900 bg-gray-600 dark:bg-gray-600 font-mono group flex flex-row text-start">
+        <button class="px-3 py-1 rounded text-neutral-100 dark:text-neutral-900 bg-neutral-600 font-mono group flex flex-row text-start">
           <span class="w-0 overflow-hidden group-hover:w-24 group-focus:w-24 transition-all block">Nul</span>
           <span><?php echo $clubStats['nbMatchNuls']; ?></span>
         </button>

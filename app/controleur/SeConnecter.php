@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       }
     }
   }
-  header('Location: /vue/log-in/php', true, 303);
+  header('Location: /vue/log-in.php', true, 303);
   exit();
 }
 ?>
