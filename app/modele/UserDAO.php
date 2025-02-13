@@ -31,7 +31,7 @@ class UserDAO
   {
     $username = $user->getUsername();
     $password_hash = $user->getPasswordHash();
-    $insertedRow = $this->conn->run_query(
+    $insertedRow = $this->conn->insert(
       'INSERT INTO user (username, password_hash) VALUES (?, ?);',
       $username,
       $password_hash
@@ -75,7 +75,7 @@ class UserDAO
   public function search($username)
   {
     $rows = $this->conn->run_query(
-      'SELECT * FROM user WHERE username = ?;',
+      'SELECT * FROM user WHERE BINARY username = ?;',
       $username
     );
 

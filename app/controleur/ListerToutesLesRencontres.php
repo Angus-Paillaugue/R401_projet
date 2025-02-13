@@ -6,7 +6,7 @@ class ToutesLesRencontres
   private $DAO;
   private $limit;
 
-  public function __construct($limit)
+  public function __construct($limit = null)
   {
     $this->DAO = new RencontreDAO();
     $this->limit = $limit;

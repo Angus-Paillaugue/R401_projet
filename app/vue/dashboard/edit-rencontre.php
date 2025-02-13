@@ -25,7 +25,7 @@ try {
 }
 ?>
 
-<form method="POST" action="/controleur/ModifierUneRencontre.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
+<form method="POST" action="/controleur/ModifierUneRencontre.php" class="container w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
   <h2>Modifier une rencontre</h2>
 
   <input type="hidden" name="id" value="<?php echo $rencontre->getId(); ?>" />

@@ -78,9 +78,8 @@ class RencontreDAO
     }
   }
 
-  public function delete($rencontre)
+  public function delete($id)
   {
-    $id = $rencontre->getId();
     $this->conn->run_query('DELETE FROM rencontre WHERE id = ?;', $id);
   }
 

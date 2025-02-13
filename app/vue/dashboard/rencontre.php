@@ -26,7 +26,7 @@ try {
 }
 ?>
 
-<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
+<div class="container w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <div class="flex flex-row items-center justify-between">
     <h2>Rencontre</h2>
     <div class="flex flex-row gap-4">

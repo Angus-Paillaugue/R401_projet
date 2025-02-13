@@ -1,0 +1,25 @@
+services:
+  php:
+    container_name: r401_php
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:80'
+    environment:
+      - PRODUCTION=true
+    depends_on:
+      - db
+
+  db:
+    image: mysql:latest
+    container_name: r401_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/1.sql
+
+volumes:
+  mysql_data:

@@ -7,38 +7,39 @@ require_once __DIR__ . '/RecupererUnCommentaire.php';
 class SupprimerUnCommentaire
 {
   private $DAO;
-  private $commentaire;
+  private $id;
 
-  public function __construct($commentaire)
+  public function __construct($id)
   {
-    $this->commentaire = $commentaire;
+    $this->id = $id;
     $this->DAO = new CommentaireDAO();
   }
 
   public function execute()
   {
-    $this->DAO->delete($this->commentaire);
+    $this->DAO->delete($this->id);
   }
 }
 
-if (!isset($_GET['id'])) {
-  ErrorHandling::setFatalError('ID du commentaire non fourni');
-}
+// if (!isset($_GET['id'])) {
+//   ErrorHandling::setFatalError('ID du commentaire non fourni');
+// }
 
-if (!intval($_GET['id'])) {
-  ErrorHandling::setFatalError('ID du commentaire non valide');
-}
+// if (!intval($_GET['id'])) {
+//   ErrorHandling::setFatalError('ID du commentaire non valide');
+// }
 
-try {
-  $commentaire = (new RecupererUnCommentaire($_GET['id']))->execute();
-} catch (Exception $e) {
-  ErrorHandling::setFatalError($e->getMessage());
-}
+// try {
+//   $commentaire = (new RecupererUnCommentaire($_GET['id']))->execute();
+// } catch (Exception $e) {
+//   ErrorHandling::setFatalError($e->getMessage());
+// }
 
-(new SupprimerUnCommentaire($commentaire))->execute();
+// (new SupprimerUnCommentaire($commentaire))->execute();
 
-$redirect = urldecode($_GET['redirect']) ?? '/vue/dashboard';
+// $redirect = urldecode($_GET['redirect']) ?? '/vue/dashboard';
 
-header('Location: ' . $redirect);
-exit();
+// header('Location: ' . $redirect);
+// exit();
+
 ?>

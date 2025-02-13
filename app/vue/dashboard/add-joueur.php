@@ -12,7 +12,7 @@ ob_start();
 $title = 'Ajouter un joueur';
 ?>
 
-<form method="POST" action="/controleur/CreerUnJoueur.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
+<form method="POST" action="/controleur/CreerUnJoueur.php" class="container w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <h1>
     Ajouter un joueur
   </h1>

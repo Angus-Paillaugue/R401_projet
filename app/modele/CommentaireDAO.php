@@ -31,7 +31,7 @@ class CommentaireDAO
   {
     $id_joueur = $commentaire->getIdJoueur();
     $contenu = $commentaire->getContenu();
-    $insertedRow = $this->conn->run_query(
+    $insertedRow = $this->conn->insert(
       'INSERT INTO commentaire (id_joueur, contenu) VALUES (?, ?);',
       $id_joueur,
       $contenu
@@ -45,16 +45,19 @@ class CommentaireDAO
     $id_joueur = $commentaire->getIdJoueur();
     $contenu = $commentaire->getContenu();
     $this->conn->run_query(
-      'UPDATE commentaire SET id_joueur = ?, contenu = ?, updated_at = NOW() WHERE id = ?;',
+      'UPDATE commentaire SET id_joueur = ?, contenu = ? WHERE id = ?;',
       $id_joueur,
       $contenu,
       $id
     );
   }
 
-  public function delete($commentaire)
+  public function delete($id)
   {
-    $id = $commentaire->getId();
+    $exists = $this->get($id);
+    if (!$exists) {
+      throw new Exception('Commentaire non trouvé');
+    }
     $this->conn->run_query('DELETE FROM commentaire WHERE id = ?;', $id);
   }
 

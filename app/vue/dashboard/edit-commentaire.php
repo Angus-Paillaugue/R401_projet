@@ -29,7 +29,7 @@ $joueur = new RecupererUnJoueur($commentaire->getIdJoueur());
 $joueur = $joueur->execute();
 ?>
 
-<form method="POST" action="/controleur/ModifierUnCommentaire.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
+<form method="POST" action="/controleur/ModifierUnCommentaire.php" class="container w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <h1>
     Modifier un commentaire
   </h1>

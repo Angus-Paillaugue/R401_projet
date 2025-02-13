@@ -7,32 +7,33 @@ require_once __DIR__ . '/RecupererUneRencontre.php';
 class SupprimerUneRencontre
 {
   private $DAO;
-  private $joueur;
+  private $id;
 
-  public function __construct($joueur)
+  public function __construct($id)
   {
-    $this->joueur = $joueur;
+    $this->id = $id;
     $this->DAO = new RencontreDAO();
   }
 
   public function execute()
   {
-    $this->DAO->delete($this->joueur);
+    $this->DAO->delete($this->id);
   }
 }
 
-if (!isset($_GET['id'])) {
-  ErrorHandling::setError('ID de la rencontre non fourni');
-  exit();
-}
+// if (!isset($_GET['id'])) {
+//   ErrorHandling::setError('ID de la rencontre non fourni');
+//   exit();
+// }
 
-try {
-  $joueur = (new RecupererUneRencontre($_GET['id']))->execute();
-  (new SupprimerUneRencontre($joueur))->execute();
+// try {
+//   $joueur = (new RecupererUneRencontre($_GET['id']))->execute();
+//   (new SupprimerUneRencontre($joueur))->execute();
 
-  header('Location: /vue/dashboard/');
-  exit();
-} catch (Exception $e) {
-  ErrorHandling::setFatalError($e->getMessage());
-}
+//   header('Location: /vue/dashboard/');
+//   exit();
+// } catch (Exception $e) {
+//   ErrorHandling::setFatalError($e->getMessage());
+// }
+
 ?>

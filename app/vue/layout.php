@@ -1,27 +1,26 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-require_once __DIR__ . '/../lib/components.php';
 require_once __DIR__ . '/../lib/jwt.php';
-require_once __DIR__ . '/../lib/error.php';
 
-if (isset($_COOKIE['token'])) {
-  $token = $_COOKIE['token'];
-  $payload = JWT::validateJWT($token);
-  if (!$payload) {
+// If route requiers auth, check if the user is logged in, else redirect to log-in
+if (preg_match('/^\/vue\/dashboard/', $_SERVER['REQUEST_URI'])) {
+  if (isset($_COOKIE['token'])) {
+    $token = $_COOKIE['token'];
+    $payload = JWT::validateJWT($token);
+    if (!$payload) {
+      redirect();
+    }
+    if ($payload['exp'] < time()) {
+      redirect();
+    }
+  } else {
     redirect();
   }
-} else {
-  redirect();
 }
 
 function redirect()
 {
-  if (str_starts_with($_SERVER['PHP_SELF'], '/vue/dashboard')) {
-    header('Location: /log-in.php', true, 303);
-    exit();
-  }
+  header('Location: /vue/log-in.php', true, 303);
+  exit();
 }
 ?>
 
@@ -36,45 +35,15 @@ function redirect()
   <link rel="icon" type="image/png" sizes="32x32" href="/vue/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/vue/static/favicon-16x16.png">
   <link rel="manifest" href="/vue/static/site.webmanifest">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body class="flex flex-col min-h-screen">
-  <?php // Is logged in?
 
-if ($payload) {
-    echo "<div class='p-2'><nav class='flex flex-row gap-4 items-center px-8 py-4 max-w-screen-xl mx-auto rounded-xl bg-neutral-100 dark:bg-neutral-900 w-full border border-neutral-300/50 dark:border-neutral-900'><div class='flex flex-row gap-4 items-center'>";
-    Components::Link([
-      'label' => 'Dashboard',
-      'href' => '/vue/dashboard',
-    ]);
-    Components::Link([
-      'label' => 'Joueurs',
-      'href' => '/vue/dashboard/joueurs.php',
-    ]);
-    Components::Link([
-      'label' => 'Matchs',
-      'href' => '/vue/dashboard/rencontres.php',
-    ]);
-    Components::Link([
-      'label' => 'Statistiques',
-      'href' => '/vue/dashboard/statistiques.php',
-    ]);
-    echo '</div>';
-    Components::Link([
-      'label' => 'Se déconnecter',
-      'href' => '/vue/log-out.php',
-      'class' => 'ml-auto',
-    ]);
-
-    Components::Button([
-      'icon' => 'sun',
-      'id' => 'toggle-theme',
-      'variant' => 'primary square',
-      'class' => 'p-2',
-    ]);
-    echo '</nav></div>';
-  } else {
-    redirect();
-  } ?>
+  <div class='p-2 hidden' id="nav">
+    <nav class='flex flex-row gap-4 items-center px-8 py-4 container mx-auto rounded-xl bg-neutral-100 dark:bg-neutral-900 w-full border border-neutral-300/50 dark:border-neutral-900'>
+      <div class='flex flex-row gap-4 items-center'></div>
+    </nav>
+  </div>
 
   <!-- Main Content -->
   <main class="grow px-2">
@@ -82,11 +51,53 @@ if ($payload) {
   </main>
 
   <div class="p-2">
-    <footer class="max-w-screen-xl w-full mx-auto px-4 py-2 rounded-xl bg-neutral-100 border border-neutral-300/50 dark:border-neutral-900 dark:bg-neutral-900">
+    <footer class="container w-full mx-auto px-4 py-2 rounded-xl bg-neutral-100 border border-neutral-300/50 dark:border-neutral-900 dark:bg-neutral-900">
       <p class="font-bold text-base">&copy; <?php echo date('Y'); ?> TFC</p>
     </footer>
   </div>
 
-  <script src="/vue/theme.js"></script>
+  <script type="module">
+    import { httpRequest } from '/vue/js/http.js';
+    import Components from '/vue/js/components.js';
+    const isLogged = <?php echo $payload ? 'true' : 'false'; ?>;
+
+    if (isLogged) {
+      $('#nav').removeClass('hidden');
+      $('#nav > nav > div').append([
+        Components.Link({
+          label: 'Dashboard',
+          href: '/vue/dashboard',
+        }),
+        Components.Link({
+          label: 'Joueurs',
+          href: '/vue/dashboard/joueurs.php',
+        }),
+        Components.Link({
+          label: 'Matchs',
+          href: '/vue/dashboard/rencontres.php',
+        }),
+        Components.Link({
+          label: 'Statistiques',
+          href: '/vue/dashboard/statistiques.php',
+        })
+      ]);
+
+      $('#nav > nav').append([
+        Components.Link({
+          label: 'Se déconnecter',
+          href: '/vue/log-out.php',
+          class: 'ml-auto',
+        }),
+        Components.Button({
+          icon: 'sun',
+          id: 'toggle-theme',
+          variant: 'primary square',
+          class: 'p-2',
+        }),
+      ]);
+    }
+  </script>
+
+  <script src="/vue/js/theme.js"></script>
 </body>
 </html>

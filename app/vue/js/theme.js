@@ -22,5 +22,4 @@ function setClientTheme() {
     (!('theme' in localStorage) &&
       window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.classList.toggle('dark', theme);
-  console.log('theme', theme ? 'dark' : 'light');
 }

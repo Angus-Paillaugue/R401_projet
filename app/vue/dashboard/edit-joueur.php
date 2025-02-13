@@ -24,7 +24,7 @@ try {
 }
 ?>
 
-<form method="POST" action="/controleur/ModifierUnJoueur.php" class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
+<form method="POST" action="/controleur/ModifierUnJoueur.php" class="container w-full mx-auto p-4 rounded-xl border space-y-4 border-neutral-300/50 dark:border-neutral-900">
   <h1>
     Modifier un joueur
   </h1>

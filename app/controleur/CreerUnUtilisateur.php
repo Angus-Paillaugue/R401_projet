@@ -28,29 +28,30 @@ class CreerUnUtilisateur
   }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  if (empty($username) || empty($password)) {
-    ErrorHandling::setError('Veuillez remplir tous les champs');
-    header('Location: /vue/dashboard/sign-up.php', true, 303);
-    exit();
-  } else {
-    $username = htmlspecialchars($username);
-    $password = htmlspecialchars($password);
-    $userExists = new UtilisateurExiste($username);
-    if ($userExists->execute()) {
-      ErrorHandling::setError('Ce nom d\'utilisateur existe déjà');
-    } else {
-      $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-      $createdUser = new CreerUnUtilisateur($username, $hashed_password);
-      $createdUser->execute();
-      ErrorHandling::setSuccess('Compte créé avec succès');
-      header('Location: /vue/dashboard/sign-up.php', true, 303);
-      exit();
-    }
-  }
-  header('Location: /vue/dashboard/sign-up.php', true, 303);
-  exit();
-}
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//   $username = $_POST['username'];
+//   $password = $_POST['password'];
+//   if (empty($username) || empty($password)) {
+//     ErrorHandling::setError('Veuillez remplir tous les champs');
+//     header('Location: /vue/dashboard/sign-up.php', true, 303);
+//     exit();
+//   } else {
+//     $username = htmlspecialchars($username);
+//     $password = htmlspecialchars($password);
+//     $userExists = new UtilisateurExiste($username);
+//     if ($userExists->execute()) {
+//       ErrorHandling::setError('Ce nom d\'utilisateur existe déjà');
+//     } else {
+//       $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+//       $createdUser = new CreerUnUtilisateur($username, $hashed_password);
+//       $createdUser->execute();
+//       ErrorHandling::setSuccess('Compte créé avec succès');
+//       header('Location: /vue/dashboard/sign-up.php', true, 303);
+//       exit();
+//     }
+//   }
+//   header('Location: /vue/dashboard/sign-up.php', true, 303);
+//   exit();
+// }
+
 ?>

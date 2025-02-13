@@ -1,152 +1,184 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../lib/components.php';
-require_once __DIR__ . '/../../lib/jwt.php';
-require_once __DIR__ . '/../../lib/cookies.php';
-require_once __DIR__ . '/../../lib/formatters.php';
-require_once __DIR__ . '/../../lib/error.php';
-require_once __DIR__ . '/../../controleur/ListerToutesLesRencontres.php';
-require_once __DIR__ . '/../../controleur/ListerTousLesJoueurs.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 ob_start();
-
-// Cookie exists and is valid because it's been already validated in the ../layout.php
-$jwt = Cookies::getCookie('token');
-$token = $_COOKIE['token'];
-$payload = JWT::validateJWT($token);
-$title = 'Dashboard ' . $payload['username'];
-
-try {
-  $rencontres = (new ToutesLesRencontres(4))->execute();
-  $joueurs = (new ListerTousLesJoueurs())->execute();
-} catch (Exception $e) {
-  ErrorHandling::setFatalError($e->getMessage());
-}
 ?>
 
 
-<div class="max-w-screen-xl w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900">
-	<h1>Bienvenue <?php echo $payload['username']; ?></h1>
-  <?php
-  echo "<div class='flex max-md:flex-col md:grid grid-cols-2 gap-8'><div class='flex flex-col gap-4'>";
-  Components::Button([
-    'label' => 'Ajouter une rencontre',
-    'href' => '/vue/dashboard/add-rencontre.php',
-    'icon' => 'plus',
-  ]);
-  Components::Button([
-    'label' => 'Ajouter un joueur',
-    'href' => '/vue/dashboard/add-joueur.php',
-    'icon' => 'plus',
-  ]);
-  Components::Button([
-    'label' => 'Statistiques',
-    'href' => '/vue/dashboard/statistiques.php',
-    'icon' => 'chart',
-  ]);
-  Components::Button([
-    'label' => 'Créer une un compte',
-    'href' => '/vue/dashboard/sign-up.php',
-    'icon' => 'plus',
-  ]);
-  echo '</div>';
+<div class="container w-full mx-auto p-4 rounded-xl border space-y-6 border-neutral-300/50 dark:border-neutral-900" id="main">
+	<h1>Bienvenue <span id="heading-username"></span></h1>
+  <div class='flex max-md:flex-col md:grid grid-cols-2 gap-8'>
+    <div class='flex flex-col gap-4' id="navButtons"></div>
 
-  // Liste des joueurs
-  echo "<div><h2>Joueurs</h2><div class='!m-0 max-h-[300px] overflow-y-auto rounded-lg'><table class='w-full table-auto text-sm'><thead class='sticky top-0 bg-neutral-100 dark:bg-neutral-900'><tr><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Nom</td><td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Prénom</td></tr></thead><tbody>";
-  foreach ($joueurs as $joueur) {
-    echo "<tr class='even:bg-neutral-100 dark:even:bg-neutral-900'><td class='px-4 py-1 align-middle'><a class='hover:underline' href='/vue/dashboard/joueur.php?id=" .
-      $joueur->getId() .
-      "'>" .
-      $joueur->getNom() .
-      "</a></td><td class='px-4 py-1 align-middle'>" .
-      $joueur->getPrenom() .
-      '</td></tr>';
+    <!-- Players list -->
+    <div>
+      <h2>Joueurs</h2>
+      <div class='m-0! max-h-[300px] overflow-y-auto rounded-lg'>
+        <table class='w-full table-auto text-sm' id="players-table">
+          <thead class='sticky top-0 bg-neutral-100 dark:bg-neutral-900'>
+            <tr>
+              <td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Nom</td>
+              <td scope='col' class='sticky top-0 h-12 px-4 text-left align-middle font-medium text-neutral-600 dark:text-neutral-400'>Prénom</td>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Rencontres -->
+  <section id="rencontres" class="space-y-6">
+    <div class="next">
+      <div class='flex flex-row items-center justify-between'>
+        <h2>Rencontres à venir</h2>
+        <!-- Voir tout button -->
+      </div>
+      <div class='grid grid-cols-1 lg:grid-cols-2 gap-4 list'></div>
+    </div>
+
+    <div class="previous">
+      <div class='flex flex-row items-center justify-between'>
+        <h2>Rencontres passées</h2>
+        <!-- Voir tout button -->
+      </div>
+      <div class='grid grid-cols-1 lg:grid-cols-2 gap-4 list'></div>
+    </div>
+  </section>
+</div>
+
+
+<script type="module">
+  import { httpRequest }  from '/vue/js/http.js';
+  import { renderTemplate }  from '/vue/js/html.js';
+  import Components from '/vue/js/components.js';
+
+  async function buildUI() {
+    Components.render('#navButtons', Components.Button({
+      'label': 'Ajouter une rencontre',
+      'href': '/vue/dashboard/add-rencontre.php',
+      'icon': 'plus'
+    }));
+
+    Components.render('#navButtons', Components.Button({
+      'label': 'Ajouter un joueur',
+      'href': '/vue/dashboard/add-joueur.php',
+      'icon': 'plus'
+    }));
+
+    Components.render('#navButtons', Components.Button({
+      'label': 'Ajouter un joueur',
+      'href': '/vue/dashboard/add-joueur.php',
+      'icon': 'plus'
+    }));
+
+    Components.render('#navButtons', Components.Button({
+      'label': 'Statistiques',
+      'href': '/vue/dashboard/statistiques.php',
+      'icon': 'chart'
+    }));
+
+    Components.render('#navButtons', Components.Button({
+      'label': 'Créer une un compte',
+      'href': '/vue/dashboard/sign-up.php',
+      'icon': 'plus'
+    }));
+
+    const userData = (await httpRequest('GET', '/api/auth')).data;
+    $('#heading-username').text(userData.username);
   }
-  echo '</tbody></table></div></div></div>';
 
-  // Rencontres à venir
-  if (count($rencontres['next']) > 0) {
-    echo "<div class='flex flex-row items-center justify-between'><h2>Rencontres à venir</h2>";
-    Components::Button([
-      'label' => 'Voir tout',
-      'variant' => 'primary',
-      'href' => '/vue/dashboard/rencontres.php?next',
-      'icon' => 'plus',
-    ]);
-    echo "</div><div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
-    foreach ($rencontres['next'] as $rencontre) {
-      echo "
-      <a href='/vue/dashboard/rencontre.php?id=" .
-        $rencontre->getId() .
-        "' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
-        <div class='flex flex-row justify-between items-center'>
-          <h4 class='text-2xl font-semibold'>" .
-        $rencontre->getEquipeAdverse() .
-        "</h4>
-          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>" .
-        Formatters::formatDateTime($rencontre->getDateHeure()) .
-        "</time>
-        </div>
-        <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>" .
-        $rencontre->getLieu() .
-        "</p>
-      </a>";
+  async function addPlayers() {
+    const players = await httpRequest('GET', '/api/joueur');
+
+    // Add players list
+    const playersTable = $('#players-table tbody');
+    const rowHTML = `<tr class='even:bg-neutral-100 dark:even:bg-neutral-900'><td class='px-4 py-1 align-middle'><a class='hover:underline' href='/vue/dashboard/joueur.php?id={{id}}'>{{nom}}</a></td><td class='px-4 py-1 align-middle'>{{prenom}}</td></tr>`;
+    for(const player of players.data) {
+      $(playersTable).append(renderTemplate(rowHTML, {
+        id: player.id,
+        nom: player.nom,
+        prenom: player.prenom
+      }));
     }
-    echo '</div>';
   }
 
-  // Rencontres passées
-  if (count($rencontres['previous']) > 0) {
-    echo "<div class='flex flex-row items-center justify-between'><h2>Rencontres passées</h2>";
-    Components::Button([
-      'label' => 'Voir tout',
-      'variant' => 'primary',
-      'href' => '/vue/dashboard/rencontres.php?previous',
-      'icon' => 'plus',
-    ]);
-    echo "</div><div class='grid grid-cols-1 lg:grid-cols-2 gap-4'>";
-    foreach ($rencontres['previous'] as $rencontre) {
-      // Couleur du badge en fonction du résultat
-      $pillBg =
-        $rencontre->getResultat() === 'Nul'
+  async function addRencontres() {
+    const rencontres = (await httpRequest('GET', '/api/rencontre')).data;
+
+    const previousTemplate = `
+      <a href='/vue/dashboard/rencontre.php?id={{id}}' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
+        <div class='flex flex-row justify-between items-center'>
+          <h4 class='text-2xl font-semibold'>{{equipe_adverse}}</h4>
+          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>{{date_heure}}</time>
+        </div>
+        <div class='flex flex-row items-end justify-between'>
+          <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>{{lieu}}</p>
+          {{pill}}
+        </div>
+      </a>`;
+    for(const previous of rencontres.previous) {
+      const pillBg =
+        previous.resultat === 'Nul'
           ? 'bg-neutral-600'
-          : ($rencontre->getResultat() == 'Victoire'
+          : (previous.resultat == 'Victoire'
             ? 'bg-green-600'
             : 'bg-red-600');
       // Affichage du badge si le résultat est défini
-      $pill = $rencontre->getResultat()
-        ? "<div class='px-2 py-1 text-base rounded-full text-neutral-100 font-semibold " .
-          $pillBg .
-          "'>" .
-          $rencontre->getResultat() .
-          '</div>'
-        : '';
-      echo "
-      <a href='/vue/dashboard/rencontre.php?id=" .
-        $rencontre->getId() .
-        "' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
-        <div class='flex flex-row justify-between items-center'>
-          <h4 class='text-2xl font-semibold'>" .
-        $rencontre->getEquipeAdverse() .
-        "</h4>
-          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>" .
-        Formatters::formatDateTime($rencontre->getDateHeure()) .
-        "</time>
-        </div>
-        <div class='flex flex-row items-end justify-between'>
-          <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>" .
-        $rencontre->getLieu() .
-        "</p>
-          $pill
-        </div>
-      </a>";
+      const pill = previous.resultat ? `<div class='px-2 py-1 text-base rounded-full text-neutral-100 font-semibold ${pillBg}'>${previous.resultat}</div>` : ' ';
+      $("section#rencontres > .previous > .list").append(renderTemplate(previousTemplate, {
+        id: previous.id,
+        equipe_adverse: previous.equipe_adverse,
+        date_heure: new Date(previous.date_heure).toLocaleString(),
+        lieu: previous.lieu,
+        pill
+      }));
     }
-    echo '</div>';
+
+    const nextTemplate = `
+      <a href='/vue/dashboard/rencontre.php?id={{id}}' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
+        <div class='flex flex-row justify-between items-center'>
+          <h4 class='text-2xl font-semibold'>{{equipe_adverse}}</h4>
+          <time class='text-base text-neutral-600 dark:text-neutral-400 font-base'>{{date_heure}}</time>
+        </div>
+        <p class='text-neutral-600 dark:text-neutral-400 text-lg font-semibold'>{{lieu}}</p>
+      </a>`;
+    for(const next of rencontres.next) {
+      $("section#rencontres > .next > .list").append(renderTemplate(nextTemplate, {
+        id: next.id,
+        equipe_adverse: next.equipe_adverse,
+        date_heure: new Date(next.date_heure).toLocaleString(),
+        lieu: next.lieu
+      }));
+    }
+
+    if(rencontres.previous.length > 0) {
+      Components.render($("section#rencontres > .previous > div"), Components.Button({
+        'label': 'Voir tout',
+        'variant': 'primary',
+        'href': '/vue/dashboard/rencontres.php?previous',
+        'icon': 'plus'
+      }));
+    }
+
+    if(rencontres.next.length > 0) {
+      Components.render($("section#rencontres > .next > div"), Components.Button({
+        'label': 'Voir tout',
+        'variant': 'primary',
+        'href': '/vue/dashboard/rencontres.php?next',
+        'icon': 'plus'
+      }));
+    }
   }
-  ?>
-</div>
+
+
+  // Main function to populate the page
+  function main() {
+    Promise.all([buildUI(), addPlayers(), addRencontres()]); // Could just call buildUI(), addPlayers() and addRencontres() but this is more explicit
+  }
+
+  $(document).ready(main);
+</script>
 
 <?php
 $content = ob_get_clean();

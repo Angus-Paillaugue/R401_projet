@@ -19,42 +19,43 @@ class ModifierUnJoueur
   }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (!isset($_POST['id'])) {
-    ErrorHandling::setFatalError('ID du joueur non valide');
-  }
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//   if (!isset($_POST['id'])) {
+//     ErrorHandling::setFatalError('ID du joueur non valide');
+//   }
 
-  if (
-    !isset($_POST['nom']) ||
-    !isset($_POST['prenom']) ||
-    !isset($_POST['licence']) ||
-    !isset($_POST['date_de_naissance']) ||
-    !isset($_POST['taille']) ||
-    !isset($_POST['poids'])
-  ) {
-    ErrorHandling::setError('Veuillez remplir tous les champs');
-    header(
-      'Location: /vue/dashboard/edit-joueur.php?id=' . $_POST['id'],
-      true,
-      303
-    );
-    exit();
-  }
+//   if (
+//     !isset($_POST['nom']) ||
+//     !isset($_POST['prenom']) ||
+//     !isset($_POST['licence']) ||
+//     !isset($_POST['date_de_naissance']) ||
+//     !isset($_POST['taille']) ||
+//     !isset($_POST['poids'])
+//   ) {
+//     ErrorHandling::setError('Veuillez remplir tous les champs');
+//     header(
+//       'Location: /vue/dashboard/edit-joueur.php?id=' . $_POST['id'],
+//       true,
+//       303
+//     );
+//     exit();
+//   }
 
-  $joueur = new Joueur(
-    $_POST['nom'],
-    $_POST['prenom'],
-    $_POST['licence'],
-    $_POST['date_de_naissance'],
-    $_POST['taille'],
-    $_POST['poids']
-  );
-  $joueur->setId($_POST['id']);
+//   $joueur = new Joueur(
+//     $_POST['nom'],
+//     $_POST['prenom'],
+//     $_POST['licence'],
+//     $_POST['date_de_naissance'],
+//     $_POST['taille'],
+//     $_POST['poids']
+//   );
+//   $joueur->setId($_POST['id']);
 
-  $modifierUnJoueur = new ModifierUnJoueur($joueur);
-  $modifierUnJoueur->execute();
+//   $modifierUnJoueur = new ModifierUnJoueur($joueur);
+//   $modifierUnJoueur->execute();
 
-  header('Location: /vue/dashboard/joueur.php?id=' . $_POST['id'], true, 303);
-  exit();
-}
+//   header('Location: /vue/dashboard/joueur.php?id=' . $_POST['id'], true, 303);
+//   exit();
+// }
+
 ?>

@@ -81,9 +81,8 @@ class JoueurDAO
     );
   }
 
-  public function delete($joueur)
+  public function delete($id)
   {
-    $id = $joueur->getId();
     $this->conn->run_query('DELETE FROM joueur WHERE id = ?;', $id);
   }
 
@@ -136,9 +135,8 @@ class JoueurDAO
     return $joueursArray;
   }
 
-  public function getStatistics($joueur)
+  public function getStatistics($id)
   {
-    $id = $joueur->getId();
     $data = $this->conn->run_query(
       'SELECT poste, COUNT(poste) as count FROM feuille_match WHERE id_joueur = ? GROUP BY poste ORDER BY count DESC LIMIT 1;',
       $id

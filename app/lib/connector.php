@@ -55,10 +55,10 @@ class sql_connector
   {
     if (self::$instance === null) {
       self::$instance = new self(
-        'R301_projet',
-        '127.0.0.1',
-        'R301_projet',
-        'R301_projet'
+        'R401_projet',
+        array_key_exists('PRODUCTION', $_ENV) ? 'db' : '127.0.0.1',
+        'R401_projet',
+        'R401_projet'
       );
     }
     return self::$instance;

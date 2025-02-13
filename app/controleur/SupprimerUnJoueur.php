@@ -7,32 +7,33 @@ require_once __DIR__ . '/RecupererUnJoueur.php';
 class SupprimerUnJoueur
 {
   private $DAO;
-  private $joueur;
+  private $id;
 
-  public function __construct($joueur)
+  public function __construct($id)
   {
-    $this->joueur = $joueur;
+    $this->id = $id;
     $this->DAO = new JoueurDAO();
   }
 
   public function execute()
   {
-    $this->DAO->delete($this->joueur);
+    $this->DAO->delete($this->id);
   }
 }
 
-if (!isset($_GET['id'])) {
-  ErrorHandling::setError('ID du joueur non fourni');
-  exit();
-}
+// if (!isset($_GET['id'])) {
+//   ErrorHandling::setError('ID du joueur non fourni');
+//   exit();
+// }
 
-try {
-  $joueur = (new RecupererUnJoueur($_GET['id']))->execute();
-  (new SupprimerUnJoueur($joueur))->execute();
+// try {
+//   $joueur = (new RecupererUnJoueur($_GET['id']))->execute();
+//   (new SupprimerUnJoueur($joueur))->execute();
 
-  header('Location: /vue/dashboard/');
-  exit();
-} catch (Exception $e) {
-  ErrorHandling::setFatalError($e->getMessage());
-}
+//   header('Location: /vue/dashboard/');
+//   exit();
+// } catch (Exception $e) {
+//   ErrorHandling::setFatalError($e->getMessage());
+// }
+
 ?>

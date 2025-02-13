@@ -9,6 +9,7 @@
  */
 class JWT
 {
+  private static $secret = 'key'; // You should use a more secure key in production
   /**
    * Encodes data to Base64 URL format.
    *
@@ -33,12 +34,10 @@ class JWT
 
     $base64UrlPayload = JWT::base64UrlEncode(json_encode($payload));
 
-    $secret = 'key'; // You should use a more secure key in production
-
     $signature = hash_hmac(
       'sha256',
       "$base64UrlHeader.$base64UrlPayload",
-      $secret,
+      JWT::$secret,
       true
     );
     $base64UrlSignature = JWT::base64UrlEncode($signature);
@@ -54,8 +53,6 @@ class JWT
    */
   public static function validateJWT($jwt)
   {
-    $secret = 'key';
-
     $parts = explode('.', $jwt);
     if (count($parts) !== 3) {
       return false;
@@ -71,7 +68,7 @@ class JWT
     $signature = hash_hmac(
       'sha256',
       "$base64UrlHeader.$base64UrlPayload",
-      $secret,
+      JWT::$secret,
       true
     );
     $base64UrlSignature = JWT::base64UrlEncode($signature);
@@ -80,6 +77,8 @@ class JWT
       $payload = json_decode(base64_decode($payload), true);
       if (isset($payload['exp']) && $payload['exp'] > time()) {
         return $payload;
+      } else {
+        throw new Exception('Expired token');
       }
     }
 
