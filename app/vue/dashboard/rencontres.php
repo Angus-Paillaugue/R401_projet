@@ -1,5 +1,4 @@
 <?php
-session_start();
 ob_start();
 
 $title = 'Rencontres';
@@ -25,6 +24,7 @@ $title = 'Rencontres';
   import { httpRequest } from '/vue/js/http.js';
   import { renderTemplate } from '/vue/js/html.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
 
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -46,7 +46,7 @@ $title = 'Rencontres';
     window.history.replaceState({}, '', `${window.location.pathname}?${searchParams}`);
   }
 
-  const rencontres = (await httpRequest('GET', '/api/rencontre')).data;
+  const rencontres = (await httpRequest('GET', BASE_GESTION_API_URL+'/rencontre/index.php')).data;
 
   async function addRencontres(previous = true, next = true) {
     setURLParams();

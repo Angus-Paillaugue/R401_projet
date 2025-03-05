@@ -3,7 +3,9 @@
     "format": "npx prettier . --write",
     "dev": "npm-run-all --parallel dev:*",
     "dev:styles": "npx @tailwindcss/cli -i ./styles.css -o ./app/vue/output.css --watch ./app",
-    "dev:server": "php -S localhost:8000 -t ./app"
+    "dev:frontend": "php -S localhost:8200 -t ./app",
+    "dev:api-auth": "php -S localhost:8201 -t ./app",
+    "dev:api-gestion": "php -S localhost:8202 -t ./app"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.22.2",

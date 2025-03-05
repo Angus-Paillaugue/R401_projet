@@ -20,10 +20,15 @@ export async function httpRequest(method = 'GET', url, body = {}) {
   const req = await fetch(url, {
     method,
     headers,
+    credentials: 'include',
     body: ['GET', 'HEAD'].includes(method) ? null : JSON.stringify(body)
   });
   const data = await req.json();
   if (!req.ok) {
+    // If the token is invalid, redirect to the login page
+    if (data.status_code === 401) {
+      window.location.href = '/vue/log-in.php';
+    }
     throw new Error(data.status_message);
   }
   return data;

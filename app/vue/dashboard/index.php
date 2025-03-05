@@ -1,6 +1,7 @@
 <?php
-session_start();
 ob_start();
+
+$title = 'Dashboard';
 ?>
 
 
@@ -52,6 +53,7 @@ ob_start();
   import { httpRequest }  from '/vue/js/http.js';
   import { renderTemplate }  from '/vue/js/html.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL, BASE_AUTH_API_URL } from '/vue/js/constants.js';
 
   async function buildUI() {
     Components.render('#navButtons', Components.Button({
@@ -84,12 +86,12 @@ ob_start();
       'icon': 'plus'
     }));
 
-    const userData = (await httpRequest('GET', '/api/auth')).data;
+    const userData = (await httpRequest('GET', BASE_AUTH_API_URL + '/index.php')).data;
     $('#heading-username').text(userData.username);
   }
 
   async function addPlayers() {
-    const players = await httpRequest('GET', '/api/joueur');
+    const players = await httpRequest('GET', BASE_GESTION_API_URL+'/joueur/index.php');
 
     // Add players list
     const playersTable = $('#players-table tbody');
@@ -104,7 +106,7 @@ ob_start();
   }
 
   async function addRencontres() {
-    const rencontres = (await httpRequest('GET', '/api/rencontre')).data;
+    const rencontres = (await httpRequest('GET', BASE_GESTION_API_URL+'/rencontre')).data;
 
     const previousTemplate = `
       <a href='/vue/dashboard/rencontre.php?id={{id}}' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>
@@ -153,7 +155,7 @@ ob_start();
     }
 
     if(rencontres.previous.length > 0) {
-      Components.render($("section#rencontres > .previous > div"), Components.Button({
+      Components.render("section#rencontres > .previous > div", Components.Button({
         'label': 'Voir tout',
         'variant': 'primary',
         'href': '/vue/dashboard/rencontres.php?previous',
@@ -162,7 +164,7 @@ ob_start();
     }
 
     if(rencontres.next.length > 0) {
-      Components.render($("section#rencontres > .next > div"), Components.Button({
+      Components.render("section#rencontres > .next > div", Components.Button({
         'label': 'Voir tout',
         'variant': 'primary',
         'href': '/vue/dashboard/rencontres.php?next',

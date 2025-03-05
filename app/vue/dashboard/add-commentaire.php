@@ -16,6 +16,7 @@ $title = 'Ajouter un commentaire';
 <script type="module">
   import { httpRequest } from '/vue/js/http.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
 
   const playerId = new URL(window.location).searchParams.get('id');
   $('[name="id"]').val(playerId);
@@ -40,7 +41,7 @@ $title = 'Ajouter un commentaire';
       setFormError('Le commentaire ne peut pas être vide');
       return;
     }
-    const response = await httpRequest("POST", '/api/commentaire', {
+    const response = await httpRequest("POST", BASE_GESTION_API_URL+'/commentaire/index.php', {
       contenu: data.commentaire,
       id_joueur: data.id,
     });

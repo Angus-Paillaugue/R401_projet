@@ -9,7 +9,12 @@ class RencontreDAO
 
   public function __construct()
   {
-    $this->conn = sql_connector::getInstance();
+    $this->conn = sql_connector::getInstance(
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      array_key_exists('MYSQL_HOST', $_ENV) ? $_ENV['MYSQL_HOST'] : 'localhost'
+    );
   }
 
   public function get($id)
@@ -51,31 +56,6 @@ class RencontreDAO
       $resultat
     );
     return $insertedRowId;
-  }
-
-  public function update($rencontre)
-  {
-    $id = $rencontre->getId();
-    $date_heure = $rencontre->getDateHeure();
-    $equipe_adverse = $rencontre->getEquipeAdverse();
-    $lieu = $rencontre->getLieu();
-    $resultat = $rencontre->getResultat();
-    $this->conn->run_query(
-      'UPDATE rencontre SET date_heure = ?, equipe_adverse = ?, lieu = ?, resultat = ? WHERE id = ?;',
-      $date_heure,
-      $equipe_adverse,
-      $lieu,
-      $resultat,
-      $id
-    );
-
-    $feuilleMatch = $rencontre->getFeuilleMatch();
-    if ($feuilleMatch) {
-      $feuilleMatchDAO = new FeuilleMatchDAO();
-      foreach ($feuilleMatch as $feuille) {
-        $feuilleMatchDAO->update($feuille);
-      }
-    }
   }
 
   public function delete($id)

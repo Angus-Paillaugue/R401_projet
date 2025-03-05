@@ -1,21 +1,25 @@
 services:
-  gestion_api:
+  auth_api:
     container_name: r401_gestion_api
-    image: anguspllg/r401_gestion_api
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-api-gestion
     env_file:
       - .env
     ports:
       - '8202:80'
     environment:
       - PRODUCTION=true
-      - BASE_AUTH_API_URL=http://auth_api/api/auth
+      - BASE_AUTH_API_URL=http://api_auth/api/auth
       - MYSQL_HOST=db_gestion
     depends_on:
       - db_gestion
 
-  auth_api:
+  api_auth:
     container_name: r401_auth_api
-    image: anguspllg/r401_auth_api
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-api-auth
     env_file:
       - .env
     environment:
@@ -28,7 +32,9 @@ services:
 
   frontend:
     container_name: r401_frontend
-    image: anguspllg/r401_frontend
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-frontend
     ports:
       - '8200:80'
 

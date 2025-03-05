@@ -1,5 +1,4 @@
 <?php
-session_start();
 ob_start();
 
 $title = 'Statistiques';
@@ -59,10 +58,11 @@ $title = 'Statistiques';
   import { httpRequest } from '/vue/js/http.js';
   import { renderTemplate } from '/vue/js/html.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
+
 
   // TODO: Error handling
-  const stats = (await httpRequest('GET', '/api/stats/club')).data;
-  console.log(stats)
+  const stats = (await httpRequest('GET', BASE_GESTION_API_URL+'/stats/club/index.php')).data;
 
   // Set club stats
   const victoryPercentage = ((stats.club.nbMatchGagnes / stats.club.nbMatchTotal) * 100).toFixed(2);
@@ -88,7 +88,6 @@ $title = 'Statistiques';
   `;
 
   stats.joueurs.forEach(joueur => {
-    console.log(joueur)
     const row = renderTemplate(tableRowTemplate, {
       id: joueur.id,
       prenom: joueur.prenom,

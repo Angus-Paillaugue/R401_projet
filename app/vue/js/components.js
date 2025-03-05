@@ -59,7 +59,7 @@ class Components {
     const classes = tw(baseClasses, variantClass, classList);
     const iconElement = icon ? Components.Icon({ icon }) : null;
 
-    const restParams = ['id'].reduce((acc, param) => {
+    const restParams = Object.keys(params).reduce((acc, param) => {
       const value = Components.merge(params, param);
       if (value) {
         acc[param] = value === true ? '' : value;
@@ -408,7 +408,7 @@ class Components {
     return wrapper;
   }
 
-  static render(target, component) {
+  static render(target, component, replace = false) {
     // If is JQuery object, convert to DOM element
     if (target instanceof jQuery) {
       target = target.get(0);
@@ -422,7 +422,11 @@ class Components {
       throw new Error('Invalid target element');
     }
 
-    target.appendChild(component);
+    if (replace) {
+      target.replaceWith(component);
+    } else {
+      target.appendChild(component);
+    }
   }
 }
 

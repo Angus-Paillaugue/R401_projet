@@ -1,5 +1,4 @@
 <?php
-session_start();
 ob_start();
 
 $title = 'Joueurs';
@@ -16,9 +15,10 @@ $title = 'Joueurs';
 <script type="module">
   import { httpRequest } from '/vue/js/http.js';
   import { renderTemplate }  from '/vue/js/html.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
 
   // TODO: Error handling
-  const players = (await httpRequest('GET', '/api/joueur')).data;
+  const players = (await httpRequest('GET', BASE_GESTION_API_URL+'/joueur/index.php')).data;
   const template = `
     <a href='/vue/dashboard/joueur.php?id={{id}}' class="bg-neutral-100 dark:bg-neutral-900 border border-neutral-300/50 dark:border-neutral-900 p-4 rounded-xl">
       <h4 class="text-2xl font-semibold">{{prenom}} {{nom}}</h4>

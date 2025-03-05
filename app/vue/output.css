@@ -1,8 +1,8 @@
-/*! tailwindcss v4.0.6 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.0.0 | MIT License | https://tailwindcss.com */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @layer theme, base, components, utilities;
 @layer theme {
-  :root, :host {
+  :root {
     --font-sans: Poppins;
     --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: JetBrains Mono;
@@ -586,9 +586,6 @@
   }
   .mx-auto {
     margin-inline: auto;
-  }
-  .my-10 {
-    margin-block: calc(var(--spacing) * 10);
   }
   .ms-3 {
     margin-inline-start: calc(var(--spacing) * 3);

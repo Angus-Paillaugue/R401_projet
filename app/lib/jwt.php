@@ -3,13 +3,24 @@
 /**
  * Class JWT
  *
+ * @initialization Call JWT::init() before using any JWT methods
+ *
  * A simple implementation of JSON Web Token (JWT) encoding and decoding.
  *
- * @package School\Lib
  */
 class JWT
 {
-  private static $secret = 'key'; // You should use a more secure key in production
+  private static $secret = 'KEY';
+
+  public static function init()
+  {
+    self::$secret = array_key_exists('JWT_SECRET', $_ENV)
+      ? $_ENV['JWT_SECRET']
+      : 'KEY';
+  }
+
+  /**
+   * Encodes data to Base64 URL format.
   /**
    * Encodes data to Base64 URL format.
    *

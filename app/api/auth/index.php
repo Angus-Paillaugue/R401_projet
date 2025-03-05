@@ -6,14 +6,30 @@ require_once __DIR__ . '/../../lib/connector.php';
 require_once __DIR__ . '/../../lib/jwt.php';
 require_once __DIR__ . '/../../lib/api.php';
 require_once __DIR__ . '/../../modele/UserDAO.php';
-require_once __DIR__ . '/../auth.php';
+JWT::init();
 
 define('TOKEN_EXPIRATION', 60 * 60 * 24); // Token expiration set to 1 day
 
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
-    $payload = authenticate_request();
-    if ($payload) {
+    $headers = getallheaders();
+    if (!API::keyExists($headers, 'Authorization')) {
+      API::deliver_response(401, 'Authorization header is missing');
+    }
+
+    $jwt = $headers['Authorization'];
+    try {
+      $jwt = str_replace('Bearer ', '', $jwt);
+      $payload = JWT::validateJWT($jwt);
+
+      if (!$payload) {
+        API::deliver_response(401, 'Invalid authentication token');
+      }
+
+      if ($payload['exp'] < time()) {
+        API::deliver_response(401, 'Expired authentication token');
+      }
+
       API::deliver_response(
         200,
         'User authenticated successfully',
@@ -25,9 +41,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
           ARRAY_FILTER_USE_KEY
         )
       );
-    } else {
-      API::deliver_response(401, 'Invalid authentication token');
+    } catch (Exception $e) {
+      API::deliver_response(401, $e->getMessage());
     }
+    API::deliver_response(401, 'Invalid authentication token');
     break;
   case 'POST':
     $body = json_decode(file_get_contents('php://input'), true);
@@ -61,7 +78,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
           'path' => '/',
           'domain' => '',
           'secure' => isset($_SERVER['HTTPS']),
-          'httponly' => false,
+          'httponly' => false, // Allow JS to access
           'samesite' => 'Lax', // None || Lax  || Strict
         ];
         setcookie('token', $jwt, $cookieOptions);

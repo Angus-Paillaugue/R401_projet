@@ -1,5 +1,4 @@
 <?php
-session_start();
 ob_start();
 
 $title = 'Joueur';
@@ -54,88 +53,80 @@ if (!isset($_GET['id'])) {
 
 <script type="module">
   import { httpRequest } from '/vue/js/http.js';
+  import { renderTemplate } from '/vue/js/html.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
 
   const playerId = new URLSearchParams(window.location.search).get('id');
 
-  const playerRes = await httpRequest('GET', `/api/joueur?id=${playerId}`);
+  const playerRes = await httpRequest('GET', BASE_GESTION_API_URL+`/joueur/index.php?id=${playerId}`);
   if(playerRes.status === 404) {
     window.location.href = '/vue/dashboard/joueurs.php';
   }
   const player = playerRes.data;
-  const statsRes = await httpRequest('GET', `/api/stats/player?id=${playerId}`);
+  const statsRes = await httpRequest('GET', BASE_GESTION_API_URL+`/stats/player/index.php?id=${playerId}`);
   if(statsRes.status === 404) {
     window.location.href = '/vue/dashboard/joueurs.php';
   }
   const stats = statsRes.data;
 
-
   $('#playerName').text(`${player.nom} ${player.prenom}`);
-
-  $('#playerActions').append([
-    Components.Button({
-      label: 'Modifier',
-      href: `/vue/dashboard/edit-joueur.php?id=${player.id}`,
-    }),
-    Components.Button({
-      icon: 'trash',
-      variant: 'danger square',
-      class: 'p-3',
-      href: `/controleur/SupprimerUnJoueur.php?id=${player.id}`,
-    }),
-  ]);
-
   $('#playerLicenseNumber').text(player.numero_licence);
-
-  $('#birthdayIcon').append(Components.Icon({ icon: 'birthday' }));
-
   $('#playerBirthDate').text(player.date_naissance);
-
-  $('#weightIcon').append(Components.Icon({ icon: 'weight' }));
-
   $('#playerWeight').text(`${player.poids} kg`);
-
-  $('#statusIcon').append(Components.Icon({ icon: 'status' }));
-
   $('#playerStatus').text(player.statut);
-
-  $('#postIcon').append(Components.Icon({ icon: 'poste' }));
-
   $('#playerPost').text(stats.poste);
 
-  $('#playerComments > div').append(Components.Button({
+  Components.render('#playerActions', Components.Button({
+    label: 'Modifier',
+    href: `/vue/dashboard/edit-joueur.php?id=${player.id}`,
+  }));
+  Components.render('#playerActions', Components.Button({
+    icon: 'trash',
+    variant: 'danger square',
+    class: 'p-3',
+    href: `/controleur/SupprimerUnJoueur.php?id=${player.id}`,
+  }));
+  Components.render('#birthdayIcon', Components.Icon({ icon: 'birthday' }));
+  Components.render('#weightIcon', Components.Icon({ icon: 'weight' }));
+  Components.render('#statusIcon', Components.Icon({ icon: 'status' }));
+  Components.render('#postIcon', Components.Icon({ icon: 'poste' }));
+  Components.render('#playerComments > div', Components.Button({
     icon: 'plus',
     label: 'Ajouter',
     href: `/vue/dashboard/add-commentaire.php?id=${player.id}`,
   }));
 
-  if(player.commentaires.length === 0) {
+  // Add each comment to the list
+  const commentTemplate = `
+    <div class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900 group/comment relative overflow-hidden'>
+      <p class='text-base whitespace-pre-wrap'>{{contenu}}</p>
+      <time class='text-sm text-neutral-600 dark:text-neutral-400'>{{date}}</time>
+      <div class='opacity-0 transition-opacity group-hover/comment:opacity-100 bottom-0 absolute top-0 right-0 flex flex-col justify-between' id="comment-{{id}}"></div>
+    </div>
+  `;
+  player.commentaires.forEach(comment => {
+    $('#playerComments').append(renderTemplate(commentTemplate, comment));
+    Components.render(`#comment-${comment.id}`, Components.Button({
+      label: 'Modifier',
+      href: `/vue/dashboard/edit-commentaire.php?id=${comment.id}`,
+    }));
+    Components.render(`#comment-${comment.id}`, Components.Button({
+      label: 'Supprimer',
+      variant: 'danger',
+      class: 'delete-comment',
+      id: `delete-comment-${comment.id}`,
+    }));
+  });
 
-  } else {
-    // Add each comment to the list
-    player.commentaires.forEach(comment => {
-      $('#playerComments').append(`
-        <div class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900 group/comment relative overflow-hidden'>
-          <p class='text-base whitespace-pre-wrap'>${comment.contenu}</p>
-          <time class='text-sm text-neutral-600 dark:text-neutral-400'>
-            ${comment.date}
-          </time>
-          <div class='opacity-0 transition-opacity group-hover/comment:opacity-100 bottom-0 absolute top-0 right-0 flex flex-col justify-between' id="comment-${comment.id}"></div>
-        </div>
-      `);
-      $(`#comment-${comment.id}`).append([
-        Components.Button({
-          label: 'Modifier',
-          href: `/vue/dashboard/edit-commentaire.php?id=${comment.id}`,
-        }),
-        Components.Button({
-          label: 'Supprimer',
-          variant: 'danger',
-          href: `/controleur/SupprimerUnCommentaire.php?id=${comment.id}&redirect=${encodeURIComponent(window.location.pathname)}`,
-        })
-      ]);
-    });
-  }
+  $('.delete-comment').on('click', async function() {
+    const commentId = $(this).attr('id').split('-')[2];
+    if(!commentId) return;
+    const res = await httpRequest('DELETE', `${BASE_GESTION_API_URL}/commentaire/index.php?id=${commentId}`);
+    if(res.status_code === 200) {
+      $(this).parent().parent().remove();
+    }
+  });
 </script>
 
 <?php

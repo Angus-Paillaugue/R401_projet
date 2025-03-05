@@ -1,5 +1,4 @@
 <?php
-session_start();
 ob_start();
 
 $title = 'Créer un compte';
@@ -14,6 +13,7 @@ $title = 'Créer un compte';
   import { httpRequest } from '/vue/js/http.js';
   import { renderTemplate } from '/vue/js/html.js';
   import Components from '/vue/js/components.js';
+  import { BASE_GESTION_API_URL } from '/vue/js/constants.js';
 
   function buildUI() {
     $('form').append([
@@ -66,7 +66,7 @@ $title = 'Créer un compte';
       return;
     }
     try {
-      const res = await httpRequest("POST", "/api/utilisateur", { username, password });
+      const res = await httpRequest("POST", BASE_GESTION_API_URL+"/utilisateur/index.php", { username, password });
       if (res.status_code === 201) {
         setFormSuccess('Compte créé avec succès');
       } else {

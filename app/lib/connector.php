@@ -37,7 +37,7 @@ class sql_connector
       exit();
     }
     try {
-      $connection_string = "mysql:host=$server;dbname=$db_name";
+      $connection_string = "mysql:host=$server;dbname=$db_name;charset=utf8mb4";
       $this->pdo = new PDO($connection_string, $user, $password);
       $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
@@ -51,15 +51,14 @@ class sql_connector
    *
    * @return sql_connector The single instance of the class.
    */
-  public static function getInstance()
-  {
+  public static function getInstance(
+    $db_name,
+    $user,
+    $password,
+    $server = 'localhost'
+  ) {
     if (self::$instance === null) {
-      self::$instance = new self(
-        'R401_projet',
-        array_key_exists('PRODUCTION', $_ENV) ? 'db' : '127.0.0.1',
-        'R401_projet',
-        'R401_projet'
-      );
+      self::$instance = new self($db_name, $server, $user, $password);
     }
     return self::$instance;
   }

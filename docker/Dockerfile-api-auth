@@ -1,0 +1,18 @@
+FROM php:8.2-apache
+
+WORKDIR /var/www/html
+
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    curl
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+COPY ./app/api/auth ./api/auth
+COPY ./app/lib ./lib
+COPY ./app/modele ./modele
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]

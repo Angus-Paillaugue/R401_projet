@@ -9,7 +9,12 @@ class JoueurDAO
 
   public function __construct()
   {
-    $this->conn = sql_connector::getInstance();
+    $this->conn = sql_connector::getInstance(
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      array_key_exists('MYSQL_HOST', $_ENV) ? $_ENV['MYSQL_HOST'] : 'localhost'
+    );
   }
 
   public function get($id)
@@ -58,27 +63,40 @@ class JoueurDAO
     return $insertedRowId;
   }
 
-  public function update($joueur)
+  public function update($id, $fields)
   {
-    $id = $joueur->getId();
-    $nom = $joueur->getNom();
-    $prenom = $joueur->getPrenom();
-    $numeroLicence = $joueur->getNumeroLicence();
-    $dateNaissance = $joueur->getDateNaissance();
-    $taille = $joueur->getTaille();
-    $poids = $joueur->getPoids();
-    $statut = $joueur->getStatut();
-    $this->conn->run_query(
-      'UPDATE joueur SET nom = ?, prenom = ?, numero_licence = ?, date_naissance = ?, taille = ?, poids = ?, statut = ? WHERE id = ?;',
-      $nom,
-      $prenom,
-      $numeroLicence,
-      $dateNaissance,
-      $taille,
-      $poids,
-      $statut,
-      $id
+    $columns = [
+      'nom',
+      'prenom',
+      'numero_licence',
+      'date_naissance',
+      'taille',
+      'poid',
+    ];
+    $sql = 'UPDATE joueur SET ';
+
+    $args = array_filter(
+      $fields,
+      function ($key) use ($columns) {
+        return in_array($key, $columns);
+      },
+      ARRAY_FILTER_USE_KEY
     );
+    $sqlArgs = [];
+    $sqlValues = [];
+
+    foreach ($columns as $key => $column) {
+      if (array_key_exists($column, $args)) {
+        array_push($sqlValues, $args[$column]);
+        array_push($sqlArgs, $column . ' = ?');
+      }
+    }
+
+    $sql .= implode(', ', $sqlArgs);
+    $sql .= ' WHERE id = ?';
+    array_push($sqlValues, $id);
+
+    $this->conn->run_query($sql, ...$sqlValues);
   }
 
   public function delete($id)

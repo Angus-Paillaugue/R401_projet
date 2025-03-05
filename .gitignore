@@ -6,4 +6,5 @@ pnpm-lock.yaml
 composer.lock
 .env
 .htaccess
-mysql
+mysql_data*
+composer.lock

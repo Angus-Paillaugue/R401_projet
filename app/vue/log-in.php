@@ -1,22 +1,7 @@
 <?php
-session_start();
-require_once __DIR__ . '/../lib/jwt.php';
-require_once __DIR__ . '/../lib/cookies.php';
+ob_start();
 
 $title = 'Log-in';
-
-$jwt = Cookies::getCookie('token');
-$payload = null;
-
-if ($jwt) {
-  $payload = JWT::validateJWT($jwt);
-  if ($payload) {
-    header('Location: /vue/dashboard', true, 303);
-    exit();
-  }
-}
-
-ob_start();
 ?>
 
 <div class="max-w-xl mx-auto w-full p-4">
@@ -28,6 +13,7 @@ ob_start();
 <script type="module">
   import { httpRequest }  from './js/http.js';
   import Components from './js/components.js';
+  import { BASE_AUTH_API_URL } from './js/constants.js';
 
   function buildUI() {
     const components = [
@@ -64,7 +50,7 @@ ob_start();
     const formData = new FormData(e.target);
     const { username, password } = Object.fromEntries(formData.entries());
     try {
-      const res = await httpRequest("POST", "/api/auth", { username, password });
+      const res = await httpRequest("POST", BASE_AUTH_API_URL + '/index.php', { username, password });
       if (res.status_code === 200) {
         window.location.href = '/vue/dashboard';
       } else {

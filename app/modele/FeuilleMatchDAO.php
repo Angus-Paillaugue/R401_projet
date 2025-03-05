@@ -9,7 +9,12 @@ class FeuilleMatchDAO
 
   public function __construct()
   {
-    $this->conn = sql_connector::getInstance();
+    $this->conn = sql_connector::getInstance(
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      'R401_projet_gestion',
+      array_key_exists('MYSQL_HOST', $_ENV) ? $_ENV['MYSQL_HOST'] : 'localhost'
+    );
   }
 
   public function get($id)

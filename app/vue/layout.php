@@ -1,29 +1,3 @@
-<?php
-require_once __DIR__ . '/../lib/jwt.php';
-
-// If route requiers auth, check if the user is logged in, else redirect to log-in
-if (preg_match('/^\/vue\/dashboard/', $_SERVER['REQUEST_URI'])) {
-  if (isset($_COOKIE['token'])) {
-    $token = $_COOKIE['token'];
-    $payload = JWT::validateJWT($token);
-    if (!$payload) {
-      redirect();
-    }
-    if ($payload['exp'] < time()) {
-      redirect();
-    }
-  } else {
-    redirect();
-  }
-}
-
-function redirect()
-{
-  header('Location: /vue/log-in.php', true, 303);
-  exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,9 +31,8 @@ function redirect()
   </div>
 
   <script type="module">
-    import { httpRequest } from '/vue/js/http.js';
     import Components from '/vue/js/components.js';
-    const isLogged = <?php echo $payload ? 'true' : 'false'; ?>;
+    const isLogged = new RegExp(/^\/vue\/dashboard/).test(window.location.pathname);
 
     if (isLogged) {
       $('#nav').removeClass('hidden');
@@ -95,9 +68,28 @@ function redirect()
           class: 'p-2',
         }),
       ]);
+      $('#toggle-theme').on('click', toggleTheme);
     }
-  </script>
 
-  <script src="/vue/js/theme.js"></script>
+    function toggleTheme() {
+      const currentTheme = localStorage.getItem('theme');
+
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      localStorage.setItem('theme', newTheme);
+
+      setClientTheme();
+    }
+
+    function setClientTheme() {
+      const theme =
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.toggle('dark', theme);
+    }
+
+    $(document).load(setClientTheme);
+  </script>
 </body>
 </html>
