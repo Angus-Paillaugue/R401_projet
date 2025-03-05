@@ -2,15 +2,15 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 -- Database creation
-CREATE DATABASE IF NOT EXISTS `R401_projet`;
-USE `R401_projet`;
+CREATE DATABASE IF NOT EXISTS `R401_projet_gestion`;
+USE `R401_projet_gestion`;
 
 
 -- User: The user that will be used to connect to the database by the front and back end
-DROP USER IF EXISTS 'R401_projet'@'%';
-CREATE USER 'R401_projet'@'%' IDENTIFIED BY 'R401_projet';
+DROP USER IF EXISTS 'R401_projet_gestion'@'%';
+CREATE USER 'R401_projet_gestion'@'%' IDENTIFIED BY 'R401_projet_gestion';
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON R401_projet.* TO 'R401_projet'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON R401_projet.* TO 'R401_projet_gestion'@'%';
 FLUSH PRIVILEGES;
 
 -- Table 'joueur' pour stocker les informations des joueurs
@@ -60,16 +60,6 @@ CREATE TABLE feuille_match (
     FOREIGN KEY (id_rencontre) REFERENCES rencontre(id) ON DELETE CASCADE,
     FOREIGN KEY (id_joueur) REFERENCES joueur(id) ON DELETE CASCADE
 );
-
--- Table 'users' pour stocker les informations des utilisateurs (entraineur)
-CREATE TABLE user (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL
-);
-
-insert into `user` (`id`, `password_hash`, `username`) values (7, '$2y$10$gaTtHQ9lwY8SEuayUhIW5.SIMqGeV2AaSAZZZPlWAk/HF7NAp7Nkm', 'Angus');
-
 
 
 INSERT INTO joueur (id, prenom, nom, numero_licence, date_naissance, taille, poids, statut) VALUES
@@ -250,3 +240,44 @@ INSERT INTO feuille_match (id_rencontre, id_joueur, role_debut, role_fin, poste,
 (5, 14, 'Remplaçant', 'Remplaçant', 'Milieu', 2),
 (5, 15, 'Remplaçant', 'Remplaçant', 'Défenseur', 3),
 (5, 16, 'Remplaçant', 'Remplaçant', 'Milieu', 4);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Database creation
+CREATE DATABASE IF NOT EXISTS `R401_projet_api`;
+USE `R401_projet_api`;
+
+
+-- User: The user that will be used to connect to the database by the front and back end
+DROP USER IF EXISTS 'R401_projet_api'@'%';
+CREATE USER 'R401_projet_api'@'%' IDENTIFIED BY 'R401_projet_api';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON R401_projet_api.* TO 'R401_projet_api'@'%';
+FLUSH PRIVILEGES;
+
+-- Table 'users' pour stocker les informations des utilisateurs (entraineur)
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+insert into `user` (`id`, `password_hash`, `username`) values (7, '$2y$10$gaTtHQ9lwY8SEuayUhIW5.SIMqGeV2AaSAZZZPlWAk/HF7NAp7Nkm', 'Angus');
