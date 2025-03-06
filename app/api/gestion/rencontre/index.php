@@ -197,6 +197,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     array_push($sqlValues, $body['id']);
 
     try {
+      // Update the rencontre table
       sql_connector::getInstance(
         'R401_projet_gestion',
         'R401_projet_gestion',
@@ -206,12 +207,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
           : 'localhost'
       )->run_query($sql, ...$sqlValues);
 
-      // Update the feuilles de match
-      $feuilleMatch = $rencontre->getFeuilleMatch();
-      if ($feuilleMatch) {
+      // Update the feuilles de match if any
+      if(array_key_exists('feuille_match', $body)) {
         $feuilleMatchDAO = new FeuilleMatchDAO();
-        foreach ($feuilleMatch as $feuille) {
-          $feuilleMatchDAO->update($feuille);
+        foreach ($body['feuille_match'] as $feuille) {
+          $feuilleMetier = new FeuilleMatch(
+            intval($feuille['id_rencontre']),
+            intval($feuille['id_joueur']),
+            $feuille['role_debut'],
+            $feuille['role_fin'],
+            $feuille['poste'],
+            intval($feuille['evaluation'])
+          );
+          $feuilleMetier->setId(intval($feuille['id']));
+          $feuilleMatchDAO->update($feuilleMetier);
         }
       }
       API::deliver_response(200, 'Rencontre updated successfully');

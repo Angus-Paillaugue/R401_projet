@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 dockerfilesDirectory="$(dirname $0)/../../"
 contectDirectory="$(dirname $0)/../../../"

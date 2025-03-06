@@ -16,3 +16,4 @@ docker-compose*
 .prettierignore
 .dockerignore
 sql
+build.sh
