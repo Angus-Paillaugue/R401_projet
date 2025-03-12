@@ -106,7 +106,7 @@ $title = 'Dashboard';
   }
 
   async function addRencontres() {
-    const rencontres = (await httpRequest('GET', BASE_GESTION_API_URL+'/rencontre')).data;
+    const rencontres = (await httpRequest('GET', BASE_GESTION_API_URL+'/rencontre/index.php')).data;
 
     const previousTemplate = `
       <a href='/vue/dashboard/rencontre.php?id={{id}}' class='bg-neutral-100 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-300/50 dark:border-neutral-900'>

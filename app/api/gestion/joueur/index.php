@@ -155,6 +155,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
       ]);
     }
     break;
+  case 'OPTIONS':
+    API::deliver_response(200, 'OK');
   default:
     API::deliver_response(405, 'Method not allowed');
     break;

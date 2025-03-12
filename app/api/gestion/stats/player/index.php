@@ -27,6 +27,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
       ]);
     }
     break;
+  case 'OPTIONS':
+    header('Access-Control-Allow-Methods: GET, OPTIONS');
+    API::deliver_response(200, 'OK');
   default:
     API::deliver_response(405, 'Method not allowed');
     break;

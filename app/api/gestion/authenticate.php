@@ -2,6 +2,10 @@
 
 function authenticate_request()
 {
+  $method = $_SERVER['REQUEST_METHOD'];
+  if ($method === 'OPTIONS') {
+    return;
+  }
   $headers = getallheaders();
   $base_url = array_key_exists('BASE_AUTH_API_URL', $_ENV)
     ? $_ENV['BASE_AUTH_API_URL']

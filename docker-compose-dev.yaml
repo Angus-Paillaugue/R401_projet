@@ -1,6 +1,6 @@
 services:
   auth_api:
-    container_name: r401_gestion_api
+    container_name: r401_gestion_api_dev
     build:
       context: .
       dockerfile: docker/Dockerfile-api-gestion
@@ -10,13 +10,13 @@ services:
       - '8202:80'
     environment:
       - PRODUCTION=true
-      - BASE_AUTH_API_URL=https://auth.r401.paillaugue.fr
+      - BASE_AUTH_API_URL=https://auth-r401.paillaugue.fr
       - MYSQL_HOST=db_gestion
     depends_on:
       - db_gestion
 
   api_auth:
-    container_name: r401_auth_api
+    container_name: r401_auth_api_dev
     build:
       context: .
       dockerfile: docker/Dockerfile-api-auth
@@ -31,7 +31,7 @@ services:
       - db_auth
 
   frontend:
-    container_name: r401_frontend
+    container_name: r401_frontend_dev
     build:
       context: .
       dockerfile: docker/Dockerfile-frontend
@@ -41,7 +41,7 @@ services:
   db_auth:
     image: mysql:latest
     restart: always
-    container_name: r401_db_auth
+    container_name: r401_db_auth_dev
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     env_file:
@@ -53,7 +53,7 @@ services:
   db_gestion:
     image: mysql:latest
     restart: always
-    container_name: r401_db_gestion
+    container_name: r401_db_gestion_dev
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     volumes:
