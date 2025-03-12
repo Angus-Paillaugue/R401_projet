@@ -10,7 +10,7 @@ services:
       - '8202:80'
     environment:
       - PRODUCTION=true
-      - BASE_AUTH_API_URL=http://api_auth/api/auth
+      - BASE_AUTH_API_URL=https://auth.r401.paillaugue.fr
       - MYSQL_HOST=db_gestion
     depends_on:
       - db_gestion
