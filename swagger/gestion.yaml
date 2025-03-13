@@ -3,7 +3,7 @@ info:
   title: R4.01-Project
   version: 1.0.0
 servers:
-  - url: http://localhost:8202/api/gestion
+  - url: https://gestion-r401.paillaugue.fr/
 components:
   securitySchemes:
     bearerAuth:

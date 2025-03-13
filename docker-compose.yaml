@@ -53,3 +53,15 @@ services:
     volumes:
       - ./mysql_data_gestion:/var/lib/mysql
       - ./sql/gestion.sql:/docker-entrypoint-initdb.d/init.sql
+
+  swagger-ui:
+    ports:
+      - 8203:8080
+    image: swaggerapi/swagger-ui
+    restart: always
+    volumes:
+      - ./swagger:/usr/share/nginx/html/api
+    environment:
+      URLS: "[{ url: \"./api/auth.yaml\", name: \"Auth\" },\
+            { url: \"./api/gestion.yaml\", name: \"Gestion\" },
+            ]"
