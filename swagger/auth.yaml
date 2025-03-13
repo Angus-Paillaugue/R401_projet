@@ -35,7 +35,9 @@ paths:
               username: USERNAME
       responses:
         '200':
-          description: ''
+          description: 'User authenticated successfully'
+        '400':
+          description: 'Bad request - missing required fields - invalid credentials'
     get:
       tags:
         - Auth
@@ -44,15 +46,11 @@ paths:
       summary: Get user data
       description: Get user data
       operationId: getUserData
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: string
-            example: '1'
       responses:
         '200':
-          description: ''
+          description: 'User authenticated successfully'
+        '401':
+          description: 'Unauthorized'
 
 tags:
   - name: Auth

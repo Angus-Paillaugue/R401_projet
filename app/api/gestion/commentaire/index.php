@@ -38,7 +38,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         ]);
       }
     } else {
-      API::deliver_response(200, 'You need to pass an id to fetch a comment');
+      API::deliver_response(400, 'You need to pass an id to fetch a comment');
     }
     break;
   case 'POST':

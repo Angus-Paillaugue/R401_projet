@@ -55,6 +55,7 @@ services:
       - ./sql/gestion.sql:/docker-entrypoint-initdb.d/init.sql
 
   swagger-ui:
+    container_name: r401_swagger_ui
     ports:
       - 8203:8080
     image: swaggerapi/swagger-ui
