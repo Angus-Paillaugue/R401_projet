@@ -76,10 +76,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $cookieOptions = [
           'expires' => time() + TOKEN_EXPIRATION,
           'path' => '/',
-          'domain' => '',
-          'secure' => isset($_SERVER['HTTPS']),
+          'domain' => '.paillaugue.fr', // Set to your parent domain with leading dot
+          'secure' => true, // Must be true when SameSite=None
           'httponly' => false, // Allow JS to access
-          'samesite' => 'Lax', // None || Lax  || Strict
+          'samesite' => 'None', // Required for cross-origin access
         ];
         setcookie('token', $jwt, $cookieOptions);
         API::deliver_response(200, 'User authenticated successfully', $jwt);
@@ -88,6 +88,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
       }
     }
 
+    break;
+  case 'OPTIONS':
+    API::deliver_response(200, 'OK');
     break;
   default:
     API::deliver_response(405, 'Method not allowed');

@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: R4.01-Project
+  version: 1.0.0
+servers:
+  - url: https://auth-r401.paillaugue.fr
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /:
+    post:
+      tags:
+        - Auth
+      summary: Generate JWT
+      description: Generate JWT authenicaton token to use for the other routes and the gestion API.
+      operationId: generateJwt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: PASSWORD
+                username:
+                  type: string
+                  example: USERNAME
+            example:
+              password: PASSWORD
+              username: USERNAME
+      responses:
+        '200':
+          description: ''
+    get:
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      summary: Get user data
+      description: Get user data
+      operationId: getUserData
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+
+tags:
+  - name: Auth

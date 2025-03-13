@@ -2,4 +2,4 @@
 
 dockerComposeFile="$(dirname $0)/../../../docker-compose-dev.yaml"
 
-docker compose -f $dockerComposeFile up --build
+docker compose -f $dockerComposeFile up --build --force-recreate --remove-orphans

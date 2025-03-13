@@ -208,7 +208,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
       )->run_query($sql, ...$sqlValues);
 
       // Update the feuilles de match if any
-      if(array_key_exists('feuille_match', $body)) {
+      if (array_key_exists('feuille_match', $body)) {
         $feuilleMatchDAO = new FeuilleMatchDAO();
         foreach ($body['feuille_match'] as $feuille) {
           $feuilleMetier = new FeuilleMatch(
@@ -230,6 +230,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
       ]);
     }
     break;
+  case 'OPTIONS':
+    API::deliver_response(200, 'OK');
   default:
     API::deliver_response(405, 'Method not allowed');
     break;

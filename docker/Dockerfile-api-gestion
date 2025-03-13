@@ -13,6 +13,9 @@ COPY ./app/api/gestion ./api/gestion
 COPY ./app/lib ./lib
 COPY ./app/modele ./modele
 
+RUN sed -i 's|/var/www/html|/var/www/html/api/gestion|' /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's|/var/www/html|/var/www/html/api/gestion|' /etc/apache2/apache2.conf
+
 EXPOSE 80
 
 CMD ["apache2-foreground"]

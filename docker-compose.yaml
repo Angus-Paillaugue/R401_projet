@@ -8,7 +8,7 @@ services:
       - '8202:80'
     environment:
       - PRODUCTION=true
-      - BASE_AUTH_API_URL=http://auth_api/api/auth
+      - BASE_AUTH_API_URL=https://auth-r401.paillaugue.fr
       - MYSQL_HOST=db_gestion
     depends_on:
       - db_gestion
@@ -53,3 +53,15 @@ services:
     volumes:
       - ./mysql_data_gestion:/var/lib/mysql
       - ./sql/gestion.sql:/docker-entrypoint-initdb.d/init.sql
+
+  swagger-ui:
+    ports:
+      - 8203:8080
+    image: swaggerapi/swagger-ui
+    restart: always
+    volumes:
+      - ./swagger:/usr/share/nginx/html/api
+    environment:
+      URLS: "[{ url: \"./api/auth.yaml\", name: \"Auth\" },\
+            { url: \"./api/gestion.yaml\", name: \"Gestion\" },
+            ]"

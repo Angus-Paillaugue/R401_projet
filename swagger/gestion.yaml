@@ -1,0 +1,354 @@
+openapi: 3.0.3
+info:
+  title: R4.01-Project
+  version: 1.0.0
+servers:
+  - url: https://gestion-r401.paillaugue.fr/
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /commentaire:
+    get:
+      tags:
+        - Comment
+      summary: Returns a single comment
+      description: Returns a single comment
+      operationId: getAComment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '2'
+      responses:
+        '200':
+          description: ''
+    put:
+      tags:
+        - Comment
+      summary: Update a comment
+      description: Update a comment
+      operationId: updateAComment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contenu:
+                  type: string
+                  example: Test content 2
+                id:
+                  type: number
+                  example: 42
+                id_joueur:
+                  type: number
+                  example: 1
+            example:
+              contenu: Test content 2
+              id: 42
+              id_joueur: 1
+      responses:
+        '200':
+          description: ''
+    post:
+      tags:
+        - Comment
+      summary: Create a comment
+      description: Create a comment
+      operationId: createAComment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contenu:
+                  type: string
+                  example: Test content
+                id_joueur:
+                  type: number
+                  example: 1
+            example:
+              contenu: Test content
+              id_joueur: 1
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - Comment
+      summary: Delete a comment
+      description: Delete a comment
+      operationId: deleteAComment
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '34'
+      responses:
+        '200':
+          description: ''
+  /joueur:
+    get:
+      tags:
+        - Player
+      summary: Get a player
+      description: Get a player
+      operationId: getAPlayer
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '32'
+      responses:
+        '200':
+          description: ''
+    post:
+      tags:
+        - Player
+      summary: Create a player
+      description: Create a player
+      operationId: createAPlayer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_naissance:
+                  type: string
+                  example: '2005-09-14'
+                nom:
+                  type: string
+                  example: Paillaugue
+                numero_licence:
+                  type: number
+                  example: 1234
+                poid:
+                  type: number
+                  example: 60
+                prenom:
+                  type: string
+                  example: Angus
+                taille:
+                  type: number
+                  example: 165
+            example:
+              date_naissance: '2005-09-14'
+              nom: Paillaugue
+              numero_licence: 1234
+              poid: 60
+              prenom: Angus
+              taille: 165
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - Player
+      summary: Delete player
+      description: Delete player
+      operationId: deletePlayer
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '33'
+      responses:
+        '200':
+          description: ''
+    patch:
+      tags:
+        - Player
+      summary: Update a player
+      description: Update a player
+      operationId: updateAPlayer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                  example: 32
+                nom:
+                  type: string
+                  example: test
+            example:
+              id: 32
+              nom: test
+      responses:
+        '200':
+          description: ''
+  /utilisateur:
+    get:
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: ''
+    post:
+      tags:
+        - User
+      summary: Create a user
+      description: Create a user
+      operationId: createAUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: password
+                username:
+                  type: string
+                  example: Angus
+            example:
+              password: password
+              username: Angus
+      responses:
+        '200':
+          description: ''
+  /rencontre:
+    get:
+      tags:
+        - Rencontre
+      summary: Get a rencontre
+      description: Get a rencontre
+      operationId: getARencontre
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '10'
+      responses:
+        '200':
+          description: ''
+    post:
+      tags:
+        - Rencontre
+      summary: Create a rencontre
+      description: Create a rencontre
+      operationId: createARencontre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_heure:
+                  type: string
+                  example: 2005-09-14 14:03
+                equipe_adverse:
+                  type: string
+                  example: Mes enemis
+                lieu:
+                  type: string
+                  example: Domicile
+            example:
+              date_heure: 2005-09-14 14:03
+              equipe_adverse: Mes enemis
+              lieu: Domicile
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - Rencontre
+      summary: Delete a rencontre
+      description: Delete a rencontre
+      operationId: deleteARencontre
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '11'
+      responses:
+        '200':
+          description: ''
+    patch:
+      tags:
+        - Rencontre
+      summary: Update a rencontre
+      description: Update a rencontre
+      operationId: updateARencontre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                equipe_adverse:
+                  type: string
+                  example: Moi
+                id:
+                  type: number
+                  example: 14
+            example:
+              equipe_adverse: Moi
+              id: 14
+      responses:
+        '200':
+          description: ''
+  /feuille_match:
+    get:
+      tags:
+        - Feuille match
+      summary: Get all feuilles
+      description: Get all feuilles
+      operationId: getAllFeuilles
+      responses:
+        '200':
+          description: ''
+  /stats/club:
+    get:
+      tags:
+        - Stats
+      summary: Get club stats
+      description: Get club stats
+      operationId: getClubStats
+      responses:
+        '200':
+          description: ''
+  /gestion/stats/player:
+    get:
+      tags:
+        - Stats
+      summary: Get player stats
+      description: Get player stats
+      operationId: getPlayerStats
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: ''
+
+tags:
+  - name: Comment
+  - name: Player
+  - name: User
+  - name: Rencontre
+  - name: Feuille match
+  - name: Stats

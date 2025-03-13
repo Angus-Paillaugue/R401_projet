@@ -1,4 +1,5 @@
 # Description du Projet
+
 Ce site vous permet de gérer l'équipe de foot du Toulouse Football Club. Elle permet de gérer chaque joueur, leur postes et leurs présences ou non sur le terrain et lors d'un match. Vous pouvez aussi leur ajouter un commentaire. De plus, vous pouvez ajouter les futurs matchs et mettre des scores sur les matchs passés.
 
 # Gestion d'une équipe de Football
@@ -13,8 +14,9 @@ Pour se connecter à l'application, utiliser les identifiants suivants :
 - Mot de passe: `$iutinfo`
 
 # Membres
-| Developer | Developer |
-| -------- | ------- |
-| PAUILLAGUE Angus | POUX--BORIES Yoan |
-| angus.pauillague@etu.iut-tlse3.fr | yoan.poux-bories@etu.iut-tlse3.fr |
+
+| Developer                                                | Developer                                |
+| -------------------------------------------------------- | ---------------------------------------- |
+| PAUILLAGUE Angus                                         | POUX--BORIES Yoan                        |
+| angus.pauillague@etu.iut-tlse3.fr                        | yoan.poux-bories@etu.iut-tlse3.fr        |
 | [@Angus-Paillaugue](https://github.com/Angus-Paillaugue) | [@YoanPOUX](https://github.com/YoanPOUX) |
