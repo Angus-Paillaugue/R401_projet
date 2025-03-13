@@ -63,7 +63,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     $DAO = new UserDAO();
     $user = $DAO->search($username);
     if (count($user) == 0) {
-      API::deliver_response(500, 'User does not exist');
+      API::deliver_response(400, 'User does not exist');
     } else {
       $user = $user[0];
       if (password_verify($password, $user->getPasswordHash())) {
@@ -84,7 +84,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         setcookie('token', $jwt, $cookieOptions);
         API::deliver_response(200, 'User authenticated successfully', $jwt);
       } else {
-        API::deliver_response(500, 'Incorrect password');
+        API::deliver_response(400, 'Incorrect password');
       }
     }
 

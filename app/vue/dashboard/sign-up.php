@@ -67,7 +67,7 @@ $title = 'Créer un compte';
     }
     try {
       const res = await httpRequest("POST", BASE_GESTION_API_URL+"/utilisateur/index.php", { username, password });
-      if (res.status_code === 201) {
+      if (res.status_code === 200) {
         setFormSuccess('Compte créé avec succès');
       } else {
         setFormError(res.status_message);

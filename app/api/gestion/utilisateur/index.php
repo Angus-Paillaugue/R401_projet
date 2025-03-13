@@ -22,13 +22,19 @@ authenticate_request();
 
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
-    $userDAO = new UserDAO();
-    $users = $userDAO->getAll();
-    API::deliver_response(
-      200,
-      'Users fetched successfully',
-      array_map('transform_user', $users)
-    );
+    try {
+      $userDAO = new UserDAO();
+      $users = $userDAO->getAll();
+      API::deliver_response(
+        200,
+        'Users fetched successfully',
+        array_map('transform_user', $users)
+      );
+    } catch (Exception $e) {
+      API::deliver_response(500, 'An error occurred', [
+        'message' => $e->getMessage(),
+      ]);
+    }
     break;
   case 'POST':
     $body = json_decode(file_get_contents('php://input'), true);
@@ -56,7 +62,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
       $user->setId($insertedRowId);
 
       API::deliver_response(
-        201,
+        200,
         'User created successfully',
         transform_user($user)
       );

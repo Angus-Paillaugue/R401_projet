@@ -10,25 +10,38 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  schemas:
+    resultatRencontre:
+      type: string
+      enum:
+        - Victoire
+        - Defaite
+        - Nul
 security:
   - bearerAuth: []
+
 paths:
   /commentaire:
     get:
       tags:
         - Comment
       summary: Returns a single comment
-      description: Returns a single comment
+      description: Returns a single comment based on ID
       operationId: getAComment
       parameters:
         - name: id
           in: query
+          required: true
           schema:
-            type: string
-            example: '2'
+            type: number
+            example: 2
       responses:
         '200':
-          description: ''
+          description: 'Comment fetched successfully'
+        '400':
+          description: 'You need to pass an id to fetch a comment'
+        '500':
+          description: 'Comment not found'
     put:
       tags:
         - Comment
@@ -36,27 +49,35 @@ paths:
       description: Update a comment
       operationId: updateAComment
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - id
+                - id_joueur
+                - contenu
               properties:
-                contenu:
-                  type: string
-                  example: Test content 2
                 id:
                   type: number
-                  example: 42
                 id_joueur:
                   type: number
-                  example: 1
-            example:
-              contenu: Test content 2
-              id: 42
-              id_joueur: 1
+                contenu:
+                  type: string
+              example:
+                id: 42
+                id_joueur: 1
+                contenu: Test content 2
       responses:
         '200':
-          description: ''
+          description: 'Comment updated'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     post:
       tags:
         - Comment
@@ -64,23 +85,31 @@ paths:
       description: Create a comment
       operationId: createAComment
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - id_joueur
+                - contenu
               properties:
-                contenu:
-                  type: string
-                  example: Test content
                 id_joueur:
                   type: number
-                  example: 1
-            example:
-              contenu: Test content
-              id_joueur: 1
+                contenu:
+                  type: string
+              example:
+                id_joueur: 1
+                contenu: Test content
       responses:
         '200':
-          description: ''
+          description: 'Comment created'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     delete:
       tags:
         - Comment
@@ -90,28 +119,44 @@ paths:
       parameters:
         - name: id
           in: query
+          required: true
           schema:
-            type: string
-            example: '34'
+            type: number
+            example: 34
       responses:
         '200':
-          description: ''
+          description: 'Comment deleted'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
   /joueur:
     get:
       tags:
         - Player
-      summary: Get a player
-      description: Get a player
+      summary: Get player(s)
+      description: Get a specific player by ID, or all players if no ID is provided
       operationId: getAPlayer
       parameters:
         - name: id
           in: query
+          description: ID of the player to fetch. If omitted, returns all players.
           schema:
-            type: string
-            example: '32'
+            type: number
+            example: 32
       responses:
         '200':
-          description: ''
+          description: 'Players fetched successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Player not found'
+        '500':
+          description: 'An error occurred'
     post:
       tags:
         - Player
@@ -119,39 +164,46 @@ paths:
       description: Create a player
       operationId: createAPlayer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
               properties:
-                date_naissance:
-                  type: string
-                  example: '2005-09-14'
                 nom:
                   type: string
-                  example: Paillaugue
-                numero_licence:
-                  type: number
-                  example: 1234
-                poid:
-                  type: number
-                  example: 60
                 prenom:
                   type: string
-                  example: Angus
+                numero_licence:
+                  type: number
+                date_naissance:
+                  type: string
                 taille:
                   type: number
-                  example: 165
-            example:
-              date_naissance: '2005-09-14'
-              nom: Paillaugue
-              numero_licence: 1234
-              poid: 60
-              prenom: Angus
-              taille: 165
+                poid:
+                  type: number
+              required:
+                - nom
+                - prenom
+                - numero_licence
+                - date_naissance
+                - taille
+                - poids
+              example:
+                date_naissance: '1951-10-11'
+                nom: Goldman
+                numero_licence: 1234
+                poid: 82
+                prenom: Jean-Jacques
+                taille: 165
       responses:
         '200':
-          description: ''
+          description: 'Player(s) fetched successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     delete:
       tags:
         - Player
@@ -161,12 +213,19 @@ paths:
       parameters:
         - name: id
           in: query
+          required: true
           schema:
-            type: string
-            example: '33'
+            type: number
+            example: 33
       responses:
         '200':
-          description: ''
+          description: 'Player deleted successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     patch:
       tags:
         - Player
@@ -174,23 +233,44 @@ paths:
       description: Update a player
       operationId: updateAPlayer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
+              required:
+                - id
               properties:
                 id:
                   type: number
-                  example: 32
                 nom:
                   type: string
-                  example: test
-            example:
-              id: 32
-              nom: test
+                prenom:
+                  type: string
+                numero_licence:
+                  type: number
+                date_naissance:
+                  type: string
+                taille:
+                  type: number
+                poid:
+                  type: number
+              example:
+                id: 32
+                nom: Goldman
+                prenom: Jean-Jacques
+                numero_licence: 1234
+                date_naissance: '1951-10-11'
+                taille: 165
+                poid: 82
       responses:
         '200':
-          description: ''
+          description: 'Player updated successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
   /utilisateur:
     get:
       tags:
@@ -200,7 +280,11 @@ paths:
       operationId: getAllUsers
       responses:
         '200':
-          description: ''
+          description: 'Users fetched successfully'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     post:
       tags:
         - User
@@ -208,39 +292,57 @@ paths:
       description: Create a user
       operationId: createAUser
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - username
+                - password
               properties:
                 password:
                   type: string
-                  example: password
                 username:
                   type: string
-                  example: Angus
-            example:
-              password: password
-              username: Angus
+              example:
+                username: Jean-Jacques
+                password: password
       responses:
         '200':
-          description: ''
+          description: 'User created successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '409':
+          description: 'User already exists'
+        '500':
+          description: 'An error occurred'
   /rencontre:
     get:
       tags:
         - Rencontre
-      summary: Get a rencontre
-      description: Get a rencontre
+      summary: Get rencontre(s)
+      description: Get a specific rencontre by ID, or all rencontres if no ID is provided
       operationId: getARencontre
       parameters:
         - name: id
           in: query
+          description: ID of the rencontre to fetch. If omitted, returns all rencontres.
+          required: false
           schema:
-            type: string
-            example: '10'
+            type: number
+            example: 10
       responses:
         '200':
-          description: ''
+          description: 'Rencontre(s) fetched successfully'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Rencontre not found'
+        '500':
+          description: 'An error occurred'
     post:
       tags:
         - Rencontre
@@ -248,27 +350,35 @@ paths:
       description: Create a rencontre
       operationId: createARencontre
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - date_heure
+                - equipe_adverse
+                - lieu
               properties:
                 date_heure:
                   type: string
-                  example: 2005-09-14 14:03
                 equipe_adverse:
                   type: string
-                  example: Mes enemis
                 lieu:
                   type: string
-                  example: Domicile
-            example:
-              date_heure: 2005-09-14 14:03
-              equipe_adverse: Mes enemis
-              lieu: Domicile
+              example:
+                date_heure: 2025-04-10 14:00
+                equipe_adverse: Colomiers
+                lieu: Domicile
       responses:
         '200':
-          description: ''
+          description: 'Rencontre created successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
     delete:
       tags:
         - Rencontre
@@ -278,9 +388,10 @@ paths:
       parameters:
         - name: id
           in: query
+          required: true
           schema:
-            type: string
-            example: '11'
+            type: number
+            example: 11
       responses:
         '200':
           description: ''
@@ -291,33 +402,36 @@ paths:
       description: Update a rencontre
       operationId: updateARencontre
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - id
               properties:
-                equipe_adverse:
-                  type: string
-                  example: Moi
                 id:
                   type: number
-                  example: 14
-            example:
-              equipe_adverse: Moi
-              id: 14
+                equipe_adverse:
+                  type: string
+                date_heure:
+                  type: string
+                lieu:
+                  type: string
+                resultat:
+                  $ref: '#/components/schemas/resultatRencontre'
+              example:
+                id: 14
+                equipe_adverse: Colomiers
       responses:
         '200':
-          description: ''
-  /feuille_match:
-    get:
-      tags:
-        - Feuille match
-      summary: Get all feuilles
-      description: Get all feuilles
-      operationId: getAllFeuilles
-      responses:
-        '200':
-          description: ''
+          description: 'Rencontre updated successfully'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
   /stats/club:
     get:
       tags:
@@ -327,8 +441,12 @@ paths:
       operationId: getClubStats
       responses:
         '200':
-          description: ''
-  /gestion/stats/player:
+          description: 'Stats retrieved'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
+  /stats/player:
     get:
       tags:
         - Stats
@@ -338,17 +456,23 @@ paths:
       parameters:
         - name: id
           in: query
+          required: true
           schema:
-            type: string
-            example: '1'
+            type: number
+            example: 1
       responses:
         '200':
-          description: ''
+          description: 'Stats retrieved'
+        '400':
+          description: 'Bad request - missing required fields'
+        '401':
+          description: 'Unauthorized'
+        '500':
+          description: 'An error occurred'
 
 tags:
   - name: Comment
   - name: Player
   - name: User
   - name: Rencontre
-  - name: Feuille match
   - name: Stats
