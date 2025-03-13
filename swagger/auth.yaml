@@ -4,6 +4,12 @@ info:
   version: 1.0.0
 servers:
   - url: https://auth-r401.paillaugue.fr
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 paths:
   /:
     post:
