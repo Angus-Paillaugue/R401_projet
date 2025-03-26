@@ -57,6 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
       }
 
       $password_hash = password_hash($body['password'], PASSWORD_DEFAULT);
+      var_dump($password_hash);
       $user = new User($username, $password_hash);
       $insertedRowId = $DAO->insert($user);
       $user->setId($insertedRowId);

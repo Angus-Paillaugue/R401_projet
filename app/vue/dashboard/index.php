@@ -80,12 +80,6 @@ $title = 'Dashboard';
       'icon': 'chart'
     }));
 
-    Components.render('#navButtons', Components.Button({
-      'label': 'Créer une un compte',
-      'href': '/vue/dashboard/sign-up.php',
-      'icon': 'plus'
-    }));
-
     const userData = (await httpRequest('GET', BASE_AUTH_API_URL + '/index.php')).data;
     $('#heading-username').text(userData.username);
   }
