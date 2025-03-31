@@ -14,9 +14,10 @@ function prefixFiles() {
 }
 
 # Make a zip of the frontend
-toZipFrontend=("app/vue" "app/index.php" "app/lib/cookies.php" "package.json" "composer.json" ".dockerignore" ".gitignore" "docker-compose.yaml" "jsconfig.json" "README.md" "styles.css" ".prettierrc" ".prettierignore")
+toZipFrontend=("app/vue" "app/index.php" "app/lib/cookies.php" "package.json" "composer.json" ".dockerignore" ".gitignore" "docker-compose.yaml" "jsconfig.json" "styles.css" ".prettierrc" ".prettierignore")
 toZipAuth=("app/api/auth" "app/lib" "app/modele/UserDAO.php")
 toZipGestion=("app/api/gestion" "app/modele" "app/lib")
+toZipRoot=("README.pdf")
 
 #!/usr/bin/env bash
 
@@ -38,9 +39,13 @@ for file in ${toZipGestion[@]}; do
   cp -r $file $outputDir/rendu/gestion
 done
 
+for file in ${toZipRoot[@]}; do
+  cp -r $file $outputDir/rendu
+done
+
 # Zip the subdirectories directly
 cd $outputDir/rendu
-zip -r ../rendu.zip frontend auth gestion
+zip -r ../rendu.zip frontend auth gestion ${toZipRoot[@]}
 cd -
 
 rm -r $outputDir/rendu

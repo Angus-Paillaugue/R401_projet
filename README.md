@@ -28,6 +28,6 @@ Pour le consulter dans son intégralité, rendez-vous sur [le github du projet](
 
 | Developer                                                | Developer                                |
 | -------------------------------------------------------- | ---------------------------------------- |
-| PAUILLAGUE Angus                                         | POUX--BORIES Yoan                        |
-| angus.pauillague@etu.iut-tlse3.fr                        | yoan.poux-bories@etu.iut-tlse3.fr        |
+| PAILLAUGUE Angus                                         | POUX--BORIES Yoan                        |
+| angus.paillaugue@etu.iut-tlse3.fr                        | yoan.poux-bories@etu.iut-tlse3.fr        |
 | [@Angus-Paillaugue](https://github.com/Angus-Paillaugue) | [@YoanPOUX](https://github.com/YoanPOUX) |
